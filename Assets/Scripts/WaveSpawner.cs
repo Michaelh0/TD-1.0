@@ -16,10 +16,9 @@ public class WaveSpawner : MonoBehaviour
     {
         public float spawnRate; //{ get; private set; }
         public int enemyCount; //{ get; private set; }
-        public SpawnManager.SpawnID enemyType; //{ get; private set; }
-        
+        public EnemyManager.EnemyID enemyType; //{ get; private set; }
 
-        public Wave(float rate, int count, SpawnManager.SpawnID type)
+        public Wave(float rate, int count, EnemyManager.EnemyID type)
         {
             spawnRate = rate;
             enemyCount = count;
@@ -49,7 +48,7 @@ public class WaveSpawner : MonoBehaviour
             timeElapsed = 0;
             if (currentSpawnIndex < currentWave.enemyCount)
             {
-                EnemyManager.Spawn(currentWave.enemyType);
+                EnemyManager.Spawn(currentWave.enemyType, EnemyManager.Instance.start.position); 
                 currentSpawnIndex++;    
 
             }

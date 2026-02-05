@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
 public class UIManager : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -41,9 +42,12 @@ public class UIManager : MonoBehaviour
     private Camera cam;
     
     public Button[] buttons;
+    public Button restartButton;
+    public Button button2x;
 
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI livesText;
+    public GameObject gameOverPanel;
 
     public float towerSize;
     public GameObject towerBlueprint;
@@ -70,8 +74,11 @@ public class UIManager : MonoBehaviour
         {
             TowerButtonData towerdata = new TowerButtonData(i, defaultCost);
             buttons[i].onClick.AddListener(() => TowerSpawn(towerdata));
+            
         }
-        
+        gameOverPanel.SetActive(false);
+        restartButton.onClick.AddListener(() => GameManager.Instance.Restart());
+        button2x.onClick.AddListener(() => GameManager.Instance.ChangeTimeScale());
     }
 
     // Update is called once per frame
@@ -106,7 +113,7 @@ public class UIManager : MonoBehaviour
                     {
                         GameManager.Instance.ReduceMoney(currentTowerButtonData.towerCost);
                         Debug.Log("collided with = " + hit);
-                        SpawnManager.Spawn(SpawnManager.SpawnID.towerID, point);
+                        SpawnManager.Spawn(SpawnManager.SpawnID.towerID, 0, point);
                         currentMode = UIMode.defaultMode;
                         towerBlueprint.SetActive(false);
                     }
@@ -150,6 +157,26 @@ public class UIManager : MonoBehaviour
         Debug.Log("Button clicked = " + towerButtonData.towerId);
         towerBlueprint.SetActive(true);
         
+    }
+    public void GameOverUI(){
+        FreezeUI();
+        gameOverPanel.SetActive(true);
+    }
+    
+
+    public void FreezeUI()
+    {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            //buttons[i].SetEnabled(false); - UIElements.Button rather than UI.Button
+            //https://docs.unity3d.com/ScriptReference/UIElements.Button.html
+
+
+
+            //https://docs.unity3d.com/530/Documentation/ScriptReference/UI.Button.html older Version 5.3
+            //where button inherits interactable variable from UI.Selectable
+            buttons[i].interactable = false;
+        }
     }
 
     public void ColorShift(RaycastHit2D hit)

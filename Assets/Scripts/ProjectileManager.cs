@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class ProjectileManager : MonoBehaviour
 {
+    // public enum ProjectileID{
+    // }
+
     public static ProjectileManager Instance {get; set;}
 
-    public static ProjectileController Spawn(SpawnManager.SpawnID projectileType, Transform tower)
+    //copy from spawn in enemy manager to have multiple ProjectileIDs - repeat for FUTURE tower manager
+    public static ProjectileController Spawn(Transform tower)
     {
         //start set up in unity
-        GameObject projectile = SpawnManager.Spawn(projectileType, tower.position);
+        GameObject projectile = SpawnManager.Spawn(SpawnManager.SpawnID.projectileID, 0, tower.position);
         ProjectileController projectileController = projectile.GetComponent<ProjectileController>();
         
 

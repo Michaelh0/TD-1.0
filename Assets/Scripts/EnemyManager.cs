@@ -5,11 +5,20 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
 
+    public enum EnemyID{
+        red,
+        blue,
+        green,
+        yellow,
+        pink,
+    }
+
     public static EnemyManager Instance {get; set;}
-    public static EnemyController Spawn(SpawnManager.SpawnID enemyType)
+    public static EnemyController Spawn(EnemyID enemyID, Vector3 position)
     {
         //start set up in unity
-        GameObject enemy = SpawnManager.Spawn(enemyType, Instance.start.position);
+
+        GameObject enemy = SpawnManager.Spawn(SpawnManager.SpawnID.enemyID, (int)enemyID, position);
         EnemyController enemyController = enemy.GetComponent<EnemyController>();
         enemyController.waypointManager = Instance.waypointManager;
 
@@ -19,8 +28,25 @@ public class EnemyManager : MonoBehaviour
             Instance.enemies.Add(enemyController);
             enemy.name = "Enemy " + Instance.enemies.Count.ToString();
         }
-        enemyController.OnSpawn();
+        enemyController.OnSpawn(enemyID);
         return enemyController;
+    }
+
+
+
+    public void EnemyDies(EnemyController enemy)
+    {
+        if (enemy.enemyID > 0)
+        {
+            // hard coded - could be more than one damage
+            EnemyID temp = enemy.enemyID - 1; 
+            
+            UnityEngine.Debug.Log(temp);
+            EnemyController newEnemy = Spawn(temp, enemy.gameObject.transform.position);
+            newEnemy.currentIndex = enemy.currentIndex;
+            newEnemy.currentWaypoint = enemy.currentWaypoint;
+            
+        }
     }
 
     public Transform start;

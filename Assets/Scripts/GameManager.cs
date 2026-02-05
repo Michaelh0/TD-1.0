@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class GameManager : MonoBehaviour
     public int currentCurrency;
     public int startingLives;
     public int currentLives;
+
+    public bool isFastForward;
 
     private void Awake()
     {
@@ -25,6 +28,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        isFastForward = false;
         UIManager.Instance.UpdateLives(currentLives);
         UIManager.Instance.UpdateMoney(currentCurrency);
     }
@@ -41,11 +45,21 @@ public class GameManager : MonoBehaviour
         currentLives -= damage;
         if (currentLives <= 0)
         {
-            UnityEngine.Debug.Log("Game Over");
-            //ui manager game over
+            GameOver();
         }
         //ui manager lives
         UIManager.Instance.UpdateLives(currentLives);
+        
+    }
+
+    public void GameOver()
+    {
+        UnityEngine.Debug.Log("Game Over");
+        //ui manager game over
+        
+
+        SpawnManager.Instance.FreezeFrame();
+        UIManager.Instance.GameOverUI();
     }
 
     public void ReduceMoney(int cost)
@@ -62,6 +76,15 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.UpdateMoney(currentCurrency);
     }
 
+    public void Restart()
+    {
+        SceneManager.LoadScene("Main Scene");
+    }
 
+    public void ChangeTimeScale()
+    {
+        isFastForward = !isFastForward;
+        Time.timeScale = isFastForward ? 2.0f : 1.0f;
+    }
     
 }

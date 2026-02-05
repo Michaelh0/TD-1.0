@@ -12,14 +12,16 @@ public class EnemyController : MonoBehaviour
     public int currentHp;
     public int moneyValue;
     public int damageValue;
+    public EnemyManager.EnemyID enemyID;
     public Transform currentWaypoint;
     // Start is called before the first frame update
 
-    public void OnSpawn()
+    public void OnSpawn(EnemyManager.EnemyID givenEnemyID)
     {
         currentHp = hp;
         currentIndex = 0;
         currentWaypoint = waypointManager.GetWaypoint(currentIndex++);
+        enemyID = givenEnemyID;
     }   
 
     public void DamagePlayer()
@@ -84,6 +86,7 @@ public class EnemyController : MonoBehaviour
         
         if (currentHp <= 0){
             gameObject.SetActive(false);
+            EnemyManager.Instance.EnemyDies(this);
             GameManager.Instance.AddMoney(moneyValue);
         }
 

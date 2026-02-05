@@ -47,7 +47,7 @@ public class TowerController : MonoBehaviour
 
     public void Attack()
     {
-        ProjectileController projectileController = ProjectileManager.Spawn(SpawnManager.SpawnID.projectileID, transform);
+        ProjectileController projectileController = ProjectileManager.Spawn(transform);
         
         
         Vector3 direction = bestEnemy.transform.position - transform.position;
