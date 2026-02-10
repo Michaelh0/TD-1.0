@@ -165,7 +165,9 @@ MonoBehaviour:
   currentHp: 0
   moneyValue: 25
   damageValue: 50
+  enemyID: 0
   currentWaypoint: {fileID: 0}
+  boxCollider: {fileID: 5754709257666553242}
 --- !u!50 &585410629504706602
 Rigidbody2D:
   serializedVersion: 4

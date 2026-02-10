@@ -9,6 +9,7 @@ public class WaveSpawner : MonoBehaviour
     public Wave currentWave;
     public int currentWaveIndex;
     public int currentSpawnIndex;
+    
     public Wave[] waves;
 
     [System.Serializable]
@@ -48,12 +49,17 @@ public class WaveSpawner : MonoBehaviour
             timeElapsed = 0;
             if (currentSpawnIndex < currentWave.enemyCount)
             {
-                EnemyManager.Spawn(currentWave.enemyType, EnemyManager.Instance.start.position); 
+                EnemyController enemy = EnemyManager.Spawn(currentWave.enemyType, EnemyManager.Instance.start.position); 
+                
                 currentSpawnIndex++;    
 
             }
             else
             {
+                if (!EnemyManager.Instance.HasNoActiveEnemies())
+                {
+                    return;
+                }
                 currentSpawnIndex = 0;
                 currentWaveIndex++;
                 if (waves.Length > 0 && currentWaveIndex < waves.Length)

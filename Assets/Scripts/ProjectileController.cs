@@ -11,21 +11,34 @@ public class ProjectileController : MonoBehaviour
     public int currentPierce;
     public float lifetime;
     public float lifetimeElapsed;
+    public List<EnemyController> ignoreEnemyList;
     
     public void OnSpawn()
     {
         currentPierce = 0;
     }   
 
-
+    
     public void OnHit(EnemyController enemy)
     {
+        if(ignoreEnemyList.Contains(enemy))
+        {
+            return;
+        }
         currentPierce++;
+        ignoreEnemyList.Add(enemy);
+        enemy.currentHp--;
+
         if (currentPierce >= pierce)
         {
-            gameObject.SetActive(false);
+            ProjectileDies();
         }
-        enemy.currentHp--;
+    }
+
+    public void ProjectileDies()
+    {
+        gameObject.SetActive(false);
+        ignoreEnemyList.Clear();
     }
 
     void Start()
@@ -37,13 +50,13 @@ public class ProjectileController : MonoBehaviour
     void Update()
     {
         lifetimeElapsed += Time.deltaTime;
-    
-        
-    
+
         if (lifetimeElapsed >= lifetime)
         {
-            gameObject.SetActive(false);
+            ProjectileDies();
+            
             lifetimeElapsed = 0;
+                
         }
         
         //normalize before passing direction from TowerController

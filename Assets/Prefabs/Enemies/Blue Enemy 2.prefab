@@ -159,13 +159,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypointManager: {fileID: 0}
   currentIndex: 0
-  speed: 1
+  speed: 1.25
   distanceThreshold: 0.1
   hp: 1
   currentHp: 0
   moneyValue: 25
   damageValue: 50
+  enemyID: 0
   currentWaypoint: {fileID: 0}
+  boxCollider: {fileID: 5754709257666553242}
 --- !u!50 &585410629504706602
 Rigidbody2D:
   serializedVersion: 4

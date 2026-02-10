@@ -14,6 +14,8 @@ public class EnemyController : MonoBehaviour
     public int damageValue;
     public EnemyManager.EnemyID enemyID;
     public Transform currentWaypoint;
+
+    public BoxCollider2D boxCollider;
     // Start is called before the first frame update
 
     public void OnSpawn(EnemyManager.EnemyID givenEnemyID)
@@ -22,12 +24,21 @@ public class EnemyController : MonoBehaviour
         currentIndex = 0;
         currentWaypoint = waypointManager.GetWaypoint(currentIndex++);
         enemyID = givenEnemyID;
+        //Invoke(nameof(ColliderOn), 0.5f);
+        //ColliderOn();
     }   
+
+    // public void ColliderOn()
+    // {
+    //     boxCollider.enabled = true;
+    // }
+
 
     public void DamagePlayer()
     {
         gameObject.SetActive(false);
         GameManager.Instance.ReduceLife(damageValue);
+
     }
 
     
@@ -81,12 +92,12 @@ public class EnemyController : MonoBehaviour
             UnityEngine.Debug.Log("hit by non projectile");
             return;
         }
+        
         projectileController.OnHit(this);
 
-        
         if (currentHp <= 0){
             gameObject.SetActive(false);
-            EnemyManager.Instance.EnemyDies(this);
+            EnemyManager.Instance.EnemyDies(this, projectileController);
             GameManager.Instance.AddMoney(moneyValue);
         }
 

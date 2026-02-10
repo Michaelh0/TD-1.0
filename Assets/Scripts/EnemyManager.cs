@@ -32,22 +32,27 @@ public class EnemyManager : MonoBehaviour
         return enemyController;
     }
 
+    //possible to change sprite based on hp instead of spawn new enemy 
 
 
-    public void EnemyDies(EnemyController enemy)
+    public void EnemyDies(EnemyController enemy, ProjectileController ignoreProjectile)
     {
-        if (enemy.enemyID > 0)
+        if (enemy.enemyID > 0) // not a red balloon where enemyID = 0
         {
             // hard coded - could be more than one damage
-            EnemyID temp = enemy.enemyID - 1; 
+            EnemyID temp = enemy.enemyID - 1; // effectively move to next layer of balloon
             
             UnityEngine.Debug.Log(temp);
             EnemyController newEnemy = Spawn(temp, enemy.gameObject.transform.position);
             newEnemy.currentIndex = enemy.currentIndex;
             newEnemy.currentWaypoint = enemy.currentWaypoint;
-            
+            ignoreProjectile.ignoreEnemyList.Add(newEnemy);
+
         }
+        //dies remove from active list
     }
+
+    
 
     public Transform start;
     public WaypointManager waypointManager;
@@ -60,6 +65,18 @@ public class EnemyManager : MonoBehaviour
             Instance = this;
         }
 
+    }
+
+    public bool HasNoActiveEnemies()
+    {
+        foreach(EnemyController enemy in enemies)
+        {
+            if (enemy.gameObject.activeSelf)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
 
