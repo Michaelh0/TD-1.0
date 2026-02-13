@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
@@ -18,21 +19,26 @@ public class EnemyManager : MonoBehaviour
     {
         //start set up in unity
 
-        GameObject enemy = SpawnManager.Spawn(SpawnManager.SpawnID.enemyID, (int)enemyID, position);
+        GameObject enemy = SpawnManager.Spawn(SpawnManager.SpawnID.enemy, (int)enemyID, position);
         EnemyController enemyController = enemy.GetComponent<EnemyController>();
-        enemyController.waypointManager = Instance.waypointManager;
+        
 
         //check if enemyController exists - to initialize
         if (!Instance.enemies.Contains(enemyController))
         {
+            enemyController.waypointManager = Instance.waypointManager;
             Instance.enemies.Add(enemyController);
+            
             enemy.name = "Enemy " + Instance.enemies.Count.ToString();
         }
+        
         enemyController.OnSpawn(enemyID);
         return enemyController;
     }
 
     //possible to change sprite based on hp instead of spawn new enemy 
+
+    //bug - two red - shot - one survived !!!!!
 
 
     public void EnemyDies(EnemyController enemy, ProjectileController ignoreProjectile)
@@ -50,6 +56,11 @@ public class EnemyManager : MonoBehaviour
 
         }
         //dies remove from active list
+        // can force spawn or auto spawn - 
+        if (EnemyManager.Instance.HasNoActiveEnemies() && !waveSpawner.isActiveWave())
+        {
+            waveSpawner.SpawnNextWave();
+        }
     }
 
     
@@ -57,6 +68,16 @@ public class EnemyManager : MonoBehaviour
     public Transform start;
     public WaypointManager waypointManager;
     public List<EnemyController> enemies;
+    public WaveSpawner waveSpawner;
+    public List<EnemyController> ActiveEnemies
+    {
+        get
+        {
+            //filtering for all active enemies as a list of EnemyController
+            //WHERE - conditional in SQL
+            return enemies.Where(enemy => enemy.gameObject.activeSelf).ToList();
+        }
+    }
 
     private void Awake()
     {
@@ -69,14 +90,7 @@ public class EnemyManager : MonoBehaviour
 
     public bool HasNoActiveEnemies()
     {
-        foreach(EnemyController enemy in enemies)
-        {
-            if (enemy.gameObject.activeSelf)
-            {
-                return false;
-            }
-        }
-        return true;
+        return ActiveEnemies.Count == 0;
     }
 
 

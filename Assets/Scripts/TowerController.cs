@@ -7,7 +7,8 @@ public class TowerController : MonoBehaviour
     public float range;
     public float attackRate;
     public float lastAttackTime;
-    //public int towerCost;
+    public int towerCost;
+    
     public EnemyController bestEnemy;
     
     

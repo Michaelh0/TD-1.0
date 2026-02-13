@@ -163,8 +163,8 @@ MonoBehaviour:
   distanceThreshold: 0.1
   hp: 1
   currentHp: 0
-  moneyValue: 25
-  damageValue: 50
+  moneyValue: 1
+  damageValue: 4
   enemyID: 0
   currentWaypoint: {fileID: 0}
   boxCollider: {fileID: 5754709257666553242}

@@ -5549,10 +5549,17 @@ MonoBehaviour:
     enemyType: 0
   currentWaveIndex: 0
   currentSpawnIndex: 0
+  activeWave: 0
   waves:
   - spawnRate: 1
-    enemyCount: 11
+    enemyCount: 6
+    enemyType: 0
+  - spawnRate: 1
+    enemyCount: 6
     enemyType: 1
+  - spawnRate: 1
+    enemyCount: 6
+    enemyType: 2
 --- !u!4 &1302281212
 Transform:
   m_ObjectHideFlags: 0
@@ -6357,6 +6364,7 @@ GameObject:
   - component: {fileID: 1523781389}
   - component: {fileID: 1523781390}
   - component: {fileID: 1523781391}
+  - component: {fileID: 1523781392}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -6434,6 +6442,7 @@ MonoBehaviour:
   start: {fileID: 1965038471}
   waypointManager: {fileID: 247026163}
   enemies: []
+  waveSpawner: {fileID: 1302281211}
 --- !u!114 &1523781390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6482,8 +6491,21 @@ MonoBehaviour:
   gameOverPanel: {fileID: 1935294701}
   towerSize: 0.01
   towerBlueprint: {fileID: 162285986}
-  defaultCost: 100
+  defaultCost: 200
   currentMode: 0
+--- !u!114 &1523781392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523781385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46d22792206d16a4c9ceec4a93c09253, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  towers: []
 --- !u!1 &1525622248
 GameObject:
   m_ObjectHideFlags: 0

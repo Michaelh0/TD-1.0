@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class WaveSpawner : MonoBehaviour
 {
-    
-    public float timeElapsed;
-    public Wave currentWave;
-    public int currentWaveIndex;
-    public int currentSpawnIndex;
-    
-    public Wave[] waves;
-
     [System.Serializable]
     public class Wave
     {
@@ -27,7 +19,31 @@ public class WaveSpawner : MonoBehaviour
         }
 
     }
+
+    public float timeElapsed;
+    public Wave currentWave;
+    public int currentWaveIndex;
+    public int currentSpawnIndex;
+    public bool activeWave;
     
+    public Wave[] waves;
+    
+
+    public void SpawnNextWave()
+    {
+        currentSpawnIndex = 0;
+        currentWaveIndex++;
+        if (waves.Length > 0 && currentWaveIndex < waves.Length)
+        {
+            currentWave = waves[currentWaveIndex];
+        }
+        GameManager.Instance.AddMoney(100 + currentWaveIndex);
+    }
+
+    public bool isActiveWave()
+    {
+        return currentSpawnIndex < currentWave.enemyCount;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +53,7 @@ public class WaveSpawner : MonoBehaviour
         {
             currentWave = waves[currentWaveIndex];
         }
+        activeWave = true;
     }
 
     // Update is called once per frame
@@ -47,27 +64,13 @@ public class WaveSpawner : MonoBehaviour
         if (timeElapsed > currentWave.spawnRate && currentWaveIndex < waves.Length)
         {
             timeElapsed = 0;
-            if (currentSpawnIndex < currentWave.enemyCount)
+            if (isActiveWave())
             {
                 EnemyController enemy = EnemyManager.Spawn(currentWave.enemyType, EnemyManager.Instance.start.position); 
                 
                 currentSpawnIndex++;    
 
             }
-            else
-            {
-                if (!EnemyManager.Instance.HasNoActiveEnemies())
-                {
-                    return;
-                }
-                currentSpawnIndex = 0;
-                currentWaveIndex++;
-                if (waves.Length > 0 && currentWaveIndex < waves.Length)
-                {
-                    currentWave = waves[currentWaveIndex];
-                }
-            }
-
         }
 
     }

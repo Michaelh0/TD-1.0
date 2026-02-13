@@ -8,9 +8,9 @@ public class SpawnManager : MonoBehaviour
 {   
 
     public enum SpawnID{
-        enemyID,
-        projectileID,
-        towerID,
+        enemy,
+        projectile,
+        tower,
     }
 
 
@@ -78,9 +78,9 @@ public class SpawnManager : MonoBehaviour
         };
 
         worldObjects = new Dictionary<SpawnID, Dictionary<int, List<GameObject>>>(){
-            {SpawnID.enemyID, enemyDict},
-            {SpawnID.projectileID, projectileDict},
-            {SpawnID.towerID, towerDict}
+            {SpawnID.enemy, enemyDict},
+            {SpawnID.projectile, projectileDict},
+            {SpawnID.tower, towerDict}
         };
         
             
@@ -97,13 +97,13 @@ public class SpawnManager : MonoBehaviour
             Type currentType = null;
             switch(worldObjectsPair.Key)
             { 
-                case SpawnID.enemyID:
+                case SpawnID.enemy:
                     currentType = typeof(EnemyController);
                     break;
-                case SpawnID.projectileID:
+                case SpawnID.projectile:
                     currentType = typeof(ProjectileController);
                     break;
-                case SpawnID.towerID:
+                case SpawnID.tower:
                     currentType = typeof(TowerController);
                     break;
                 default:

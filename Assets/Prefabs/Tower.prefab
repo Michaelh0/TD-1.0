@@ -48,6 +48,7 @@ MonoBehaviour:
   range: 2
   attackRate: 6
   lastAttackTime: 0
+  towerCost: 200
   bestEnemy: {fileID: 0}
 --- !u!1 &7780907320225740724
 GameObject:

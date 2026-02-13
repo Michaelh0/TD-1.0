@@ -13,15 +13,15 @@ public class ProjectileManager : MonoBehaviour
     public static ProjectileController Spawn(Transform tower)
     {
         //start set up in unity
-        GameObject projectile = SpawnManager.Spawn(SpawnManager.SpawnID.projectileID, 0, tower.position);
-        ProjectileController projectileController = projectile.GetComponent<ProjectileController>();
+        GameObject projectileGameObject = SpawnManager.Spawn(SpawnManager.SpawnID.projectile, 0, tower.position);
+        ProjectileController projectileController = projectileGameObject.GetComponent<ProjectileController>();
         
 
         //check if projectileController exists - to initialize
         if (!Instance.projectiles.Contains(projectileController))
         {
             Instance.projectiles.Add(projectileController);
-            projectile.name = "Projectile " + Instance.projectiles.Count.ToString();
+            projectileGameObject.name = "Projectile " + Instance.projectiles.Count.ToString();
         }
         projectileController.OnSpawn();
 

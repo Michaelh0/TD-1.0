@@ -69,11 +69,19 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
-
+        GameObject[] towers = SpawnManager.Instance.prefabs[(int)SpawnManager.SpawnID.tower].listOfGameObjects;
         for (int i = 0; i < buttons.Length; i++)
         {
-            TowerButtonData towerdata = new TowerButtonData(i, defaultCost);
-            buttons[i].onClick.AddListener(() => TowerSpawn(towerdata));
+            if (towers.Length > 0 && i < towers.Length)
+            {
+                //has a tower
+                TowerController towerController = towers[i].GetComponent<TowerController>();
+                TowerButtonData towerdata = new TowerButtonData(i, towerController.towerCost);
+                buttons[i].onClick.AddListener(() => TowerSpawn(towerdata));
+            }
+            
+            
+            
             
         }
         gameOverPanel.SetActive(false);
@@ -113,7 +121,9 @@ public class UIManager : MonoBehaviour
                     {
                         GameManager.Instance.ReduceMoney(currentTowerButtonData.towerCost);
                         Debug.Log("collided with = " + hit);
-                        SpawnManager.Spawn(SpawnManager.SpawnID.towerID, 0, point);
+                        //SpawnManager.Spawn(SpawnManager.SpawnID.towerID, 0, point);
+                        TowerManager.Spawn(0, point);
+                        //0 -> currentTowerButtonData.towerID
                         currentMode = UIMode.defaultMode;
                         towerBlueprint.SetActive(false);
                     }
