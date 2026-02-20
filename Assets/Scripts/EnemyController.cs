@@ -38,13 +38,13 @@ public class EnemyController : MonoBehaviour
     {
         gameObject.SetActive(false);
         GameManager.Instance.ReduceLife(damageValue);
-
+        
     }
 
     
-    void OnEnable()
+    void OnDisable()
     {
-        
+        EnemyManager.Instance.WaveCheck();
     }
 
 
@@ -98,6 +98,7 @@ public class EnemyController : MonoBehaviour
         if (currentHp <= 0){
             gameObject.SetActive(false);
             EnemyManager.Instance.EnemyDies(this, projectileController);
+            
             GameManager.Instance.AddMoney(moneyValue);
         }
 

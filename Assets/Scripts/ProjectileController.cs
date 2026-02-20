@@ -12,10 +12,12 @@ public class ProjectileController : MonoBehaviour
     public float lifetime;
     public float lifetimeElapsed;
     public List<EnemyController> ignoreEnemyList;
+    public ProjectileCollisionBehavior projectileCollisionBehavior;
     
     public void OnSpawn()
     {
         currentPierce = 0;
+        ignoreEnemyList.Clear();
     }   
 
     
@@ -26,24 +28,28 @@ public class ProjectileController : MonoBehaviour
             return;
         }
         currentPierce++;
-        ignoreEnemyList.Add(enemy);
+        
         enemy.currentHp--;
-
+        UnityEngine.Debug.Log(currentPierce);
         if (currentPierce >= pierce)
         {
             ProjectileDies();
+        }
+
+        if (projectileCollisionBehavior != null)
+        {
+            projectileCollisionBehavior.OnCollision(this, enemy);
         }
     }
 
     public void ProjectileDies()
     {
         gameObject.SetActive(false);
-        ignoreEnemyList.Clear();
     }
 
     void Start()
     {
-        
+        projectileCollisionBehavior = GetComponent<ProjectileCollisionBehavior>();
     }
 
     // Update is called once per frame

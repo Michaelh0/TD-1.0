@@ -57,13 +57,16 @@ public class EnemyManager : MonoBehaviour
         }
         //dies remove from active list
         // can force spawn or auto spawn - 
+        
+    }
+
+    public void WaveCheck()
+    {
         if (EnemyManager.Instance.HasNoActiveEnemies() && !waveSpawner.isActiveWave())
         {
             waveSpawner.SpawnNextWave();
         }
     }
-
-    
 
     public Transform start;
     public WaypointManager waypointManager;

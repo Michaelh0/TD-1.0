@@ -5560,6 +5560,12 @@ MonoBehaviour:
   - spawnRate: 1
     enemyCount: 6
     enemyType: 2
+  - spawnRate: 1
+    enemyCount: 6
+    enemyType: 3
+  - spawnRate: 1
+    enemyCount: 6
+    enemyType: 4
 --- !u!4 &1302281212
 Transform:
   m_ObjectHideFlags: 0
@@ -6425,8 +6431,12 @@ MonoBehaviour:
     - {fileID: 3329286954424172007, guid: bfc50cb8b9354da42bdc2ef428441290, type: 3}
   - listOfGameObjects:
     - {fileID: 8518648902562220616, guid: e86a7a41027a91a46abe645a9c89acb7, type: 3}
+    - {fileID: 4215780659877259734, guid: 5a9deb0a11f866a41aa348e0a7804591, type: 3}
+    - {fileID: 5161722892760749734, guid: 256f811e6951630469dc532d1a3b4b80, type: 3}
   - listOfGameObjects:
     - {fileID: 610347537156833822, guid: 40f958381f95c8e4395b6d100fd4e7cd, type: 3}
+    - {fileID: 2438373903152545508, guid: 3a19e3d2c85bb4a46b661bca1d3705f9, type: 3}
+    - {fileID: 610347537156833822, guid: 01d09353035be104da75cf0745e41731, type: 3}
 --- !u!114 &1523781389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6491,7 +6501,6 @@ MonoBehaviour:
   gameOverPanel: {fileID: 1935294701}
   towerSize: 0.01
   towerBlueprint: {fileID: 162285986}
-  defaultCost: 200
   currentMode: 0
 --- !u!114 &1523781392
 MonoBehaviour:

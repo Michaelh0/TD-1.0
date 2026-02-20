@@ -58,33 +58,34 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        Dictionary<int, List<GameObject>> enemyDict = new Dictionary<int, List<GameObject>>()
-        {
-            {(int)EnemyManager.EnemyID.red, new List<GameObject>()},
-            {(int)EnemyManager.EnemyID.blue, new List<GameObject>()},
-            {(int)EnemyManager.EnemyID.green, new List<GameObject>()},
-            {(int)EnemyManager.EnemyID.yellow, new List<GameObject>()},
-            {(int)EnemyManager.EnemyID.pink, new List<GameObject>()},
-        };
+        Dictionary<int, List<GameObject>> enemyDict = new Dictionary<int, List<GameObject>>();
 
-        Dictionary<int, List<GameObject>> projectileDict = new Dictionary<int, List<GameObject>>()
+        foreach (EnemyManager.EnemyID enemyID in Enum.GetValues(typeof(EnemyManager.EnemyID)))
         {
-            {0, new List<GameObject>()}
-        };
+            enemyDict.Add((int)enemyID, new List<GameObject>());
+        }
 
-        Dictionary<int, List<GameObject>> towerDict = new Dictionary<int, List<GameObject>>()
+        Dictionary<int, List<GameObject>> projectileDict = new Dictionary<int, List<GameObject>>();
+
+        foreach (ProjectileManager.ProjectileID projectileID in Enum.GetValues(typeof(ProjectileManager.ProjectileID)))
         {
-            {0, new List<GameObject>()}
-        };
+            projectileDict.Add((int)projectileID, new List<GameObject>());
+        }
+
+        Dictionary<int, List<GameObject>> towerDict = new Dictionary<int, List<GameObject>>();
+
+        foreach (TowerManager.TowerID towerID in Enum.GetValues(typeof(TowerManager.TowerID)))
+        {
+            towerDict.Add((int)towerID, new List<GameObject>());
+        }
 
         worldObjects = new Dictionary<SpawnID, Dictionary<int, List<GameObject>>>(){
             {SpawnID.enemy, enemyDict},
             {SpawnID.projectile, projectileDict},
-            {SpawnID.tower, towerDict}
+            {SpawnID.tower, towerDict},
+
         };
-        
-            
- 
+         
         
         //worldObjects.Add();
     }

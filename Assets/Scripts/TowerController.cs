@@ -8,7 +8,8 @@ public class TowerController : MonoBehaviour
     public float attackRate;
     public float lastAttackTime;
     public int towerCost;
-    
+    public ProjectileManager.ProjectileID projectileID;
+    public TowerBehavior towerBehavior;
     public EnemyController bestEnemy;
     
     
@@ -48,21 +49,16 @@ public class TowerController : MonoBehaviour
 
     public void Attack()
     {
-        ProjectileController projectileController = ProjectileManager.Spawn(transform);
-        
-        
-        Vector3 direction = bestEnemy.transform.position - transform.position;
-        direction.Normalize();
-
-        projectileController.direction = direction;
-        // UnityEngine.Debug.Log("Attacking");
-        // UnityEngine.Debug.Log(bestEnemy.gameObject.name);
+        towerBehavior.Attack(this);
     }
+
+    
 
 
     void Start()
     {
         lastAttackTime = attackRate;
+        towerBehavior = GetComponent<TowerBehavior>();
     }
 
     // Update is called once per frame

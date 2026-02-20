@@ -6,6 +6,12 @@ public class TowerManager : MonoBehaviour
 {
     // Start is called before the first frame update
 
+    public enum TowerID{
+        dartMonkey,
+        tackShooter,
+        bombTower,
+    }
+
     public static TowerManager Instance{get; set;}
 
 

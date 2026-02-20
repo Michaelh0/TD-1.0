@@ -23,11 +23,11 @@ public class UIManager : MonoBehaviour
     //worry update that happens before camera is initialized - race condition
     public struct TowerButtonData
     {
-        public int towerId;
+        public int towerID;
         public int towerCost;
         public TowerButtonData(int id, int cost)
         {
-            towerId = id;
+            towerID = id;
             towerCost = cost;
         }
     };
@@ -51,7 +51,7 @@ public class UIManager : MonoBehaviour
 
     public float towerSize;
     public GameObject towerBlueprint;
-    public int defaultCost;
+    
     public TowerButtonData currentTowerButtonData;
     
 
@@ -122,8 +122,8 @@ public class UIManager : MonoBehaviour
                         GameManager.Instance.ReduceMoney(currentTowerButtonData.towerCost);
                         Debug.Log("collided with = " + hit);
                         //SpawnManager.Spawn(SpawnManager.SpawnID.towerID, 0, point);
-                        TowerManager.Spawn(0, point);
-                        //0 -> currentTowerButtonData.towerID
+                        TowerManager.Spawn(currentTowerButtonData.towerID, point);
+                        //plz don't press tower we dont have 
                         currentMode = UIMode.defaultMode;
                         towerBlueprint.SetActive(false);
                     }
@@ -164,7 +164,7 @@ public class UIManager : MonoBehaviour
         
         currentTowerButtonData = towerButtonData;
         currentMode = UIMode.towerMode;
-        Debug.Log("Button clicked = " + towerButtonData.towerId);
+        Debug.Log("Button clicked = " + towerButtonData.towerID);
         towerBlueprint.SetActive(true);
         
     }
