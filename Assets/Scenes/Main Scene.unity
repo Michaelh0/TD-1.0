@@ -6371,6 +6371,7 @@ GameObject:
   - component: {fileID: 1523781390}
   - component: {fileID: 1523781391}
   - component: {fileID: 1523781392}
+  - component: {fileID: 1523781393}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -6437,6 +6438,8 @@ MonoBehaviour:
     - {fileID: 610347537156833822, guid: 40f958381f95c8e4395b6d100fd4e7cd, type: 3}
     - {fileID: 2438373903152545508, guid: 3a19e3d2c85bb4a46b661bca1d3705f9, type: 3}
     - {fileID: 610347537156833822, guid: 01d09353035be104da75cf0745e41731, type: 3}
+  - listOfGameObjects:
+    - {fileID: 7091615958855880536, guid: 5804084a0fb0dd64aa41fe659478227d, type: 3}
 --- !u!114 &1523781389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6515,6 +6518,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towers: []
+--- !u!114 &1523781393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523781385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d8c364864919734dbeba4aa6f64eb9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  areaOfEffects: []
 --- !u!1 &1525622248
 GameObject:
   m_ObjectHideFlags: 0

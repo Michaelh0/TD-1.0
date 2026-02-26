@@ -53,6 +53,7 @@ MonoBehaviour:
   projectileID: 1
   towerBehavior: {fileID: 0}
   bestEnemy: {fileID: 0}
+  damage: 1
 --- !u!114 &2445843877625846744
 MonoBehaviour:
   m_ObjectHideFlags: 0

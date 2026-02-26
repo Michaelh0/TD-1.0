@@ -43,16 +43,51 @@ public class EnemyManager : MonoBehaviour
 
     public void EnemyDies(EnemyController enemy, ProjectileController ignoreProjectile)
     {
-        if (enemy.enemyID > 0) // not a red balloon where enemyID = 0
+        
+        // currentHP <= 0 // 
+        int nextEnemyID = (int) enemy.enemyID - 1;
+        
+        int excessDamage = enemy.currentHp * -1;
+        // effectively reduces enemyID to check damage
+        bool hasLesserEnemy = nextEnemyID - excessDamage >= 0;
+        
+        if (hasLesserEnemy) 
         {
-            // hard coded - could be more than one damage
-            EnemyID temp = enemy.enemyID - 1; // effectively move to next layer of balloon
+            // effectively move to next layer of balloon
+            EnemyID lesserEnemy = (EnemyID) nextEnemyID - excessDamage; 
             
-            UnityEngine.Debug.Log(temp);
-            EnemyController newEnemy = Spawn(temp, enemy.gameObject.transform.position);
+            //UnityEngine.Debug.Log(lesserEnemy);
+            EnemyController newEnemy = Spawn(lesserEnemy, enemy.gameObject.transform.position);
             newEnemy.currentIndex = enemy.currentIndex;
             newEnemy.currentWaypoint = enemy.currentWaypoint;
             ignoreProjectile.ignoreEnemyList.Add(newEnemy);
+
+        }
+        //dies remove from active list
+        // can force spawn or auto spawn - 
+        
+    }
+
+    public void EnemyDies(EnemyController enemy, AOEController ignoreAOE)
+    {
+        
+        // currentHP <= 0 // 
+        int nextEnemyID = (int) enemy.enemyID - 1;
+        
+        int excessDamage = enemy.currentHp * -1;
+        // effectively reduces enemyID to check damage
+        bool hasLesserEnemy = nextEnemyID - excessDamage >= 0;
+        
+        if (hasLesserEnemy) 
+        {
+            // effectively move to next layer of balloon
+            EnemyID lesserEnemy = (EnemyID) nextEnemyID - excessDamage; 
+            
+            //UnityEngine.Debug.Log(lesserEnemy);
+            EnemyController newEnemy = Spawn(lesserEnemy, enemy.gameObject.transform.position);
+            newEnemy.currentIndex = enemy.currentIndex;
+            newEnemy.currentWaypoint = enemy.currentWaypoint;
+            ignoreAOE.ignoreEnemyList.Add(newEnemy);
 
         }
         //dies remove from active list

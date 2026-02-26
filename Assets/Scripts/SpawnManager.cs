@@ -11,6 +11,7 @@ public class SpawnManager : MonoBehaviour
         enemy,
         projectile,
         tower,
+        AOE,
     }
 
 
@@ -79,10 +80,18 @@ public class SpawnManager : MonoBehaviour
             towerDict.Add((int)towerID, new List<GameObject>());
         }
 
+        Dictionary<int, List<GameObject>> aoeDict = new Dictionary<int, List<GameObject>>();
+
+        foreach (AOEManager.AOEID aoeID in Enum.GetValues(typeof(AOEManager.AOEID)))
+        {
+            aoeDict.Add((int)aoeID, new List<GameObject>());
+        }
+
         worldObjects = new Dictionary<SpawnID, Dictionary<int, List<GameObject>>>(){
             {SpawnID.enemy, enemyDict},
             {SpawnID.projectile, projectileDict},
             {SpawnID.tower, towerDict},
+            {SpawnID.AOE, aoeDict},
 
         };
          
@@ -90,7 +99,8 @@ public class SpawnManager : MonoBehaviour
         //worldObjects.Add();
     }
 
-    public void FreezeFrame()
+    // aka Pause
+    public void FreezeFrame() 
     {
 
         foreach (KeyValuePair<SpawnID, Dictionary<int, List<GameObject>>> worldObjectsPair in worldObjects)
@@ -106,6 +116,9 @@ public class SpawnManager : MonoBehaviour
                     break;
                 case SpawnID.tower:
                     currentType = typeof(TowerController);
+                    break;
+                case SpawnID.AOE:
+                    currentType = typeof(AOEController);
                     break;
                 default:
                     break;

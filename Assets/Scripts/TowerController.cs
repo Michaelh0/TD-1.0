@@ -11,6 +11,7 @@ public class TowerController : MonoBehaviour
     public ProjectileManager.ProjectileID projectileID;
     public TowerBehavior towerBehavior;
     public EnemyController bestEnemy;
+    public int damage;
     
     
     // Start is called before the first frame update

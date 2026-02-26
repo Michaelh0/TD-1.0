@@ -50,8 +50,10 @@ MonoBehaviour:
   attackRate: 6
   lastAttackTime: 0
   towerCost: 200
+  projectileID: 0
   towerBehavior: {fileID: 0}
   bestEnemy: {fileID: 0}
+  damage: 2
 --- !u!114 &5376341321998344373
 MonoBehaviour:
   m_ObjectHideFlags: 0

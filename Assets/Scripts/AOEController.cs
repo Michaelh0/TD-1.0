@@ -2,25 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileController : MonoBehaviour
+public class AOEController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public Vector3 direction;
-    public float speed;
     public int pierce;
     public int currentPierce;
+    public int damage;
+    public float size;
     public float lifetime;
     public float lifetimeElapsed;
-    public int damage;
     public List<EnemyController> ignoreEnemyList;
-    public ProjectileCollisionBehavior projectileCollisionBehavior;
-    
+
+    //possibly add queue if i want to regulate which enemy is prioritized
+
     public void OnSpawn()
     {
         currentPierce = 0;
         ignoreEnemyList.Clear();
     }   
-    // initialize projectile so tower can talk to projectile
     
     public void OnHit(EnemyController enemy)
     {
@@ -30,28 +28,34 @@ public class ProjectileController : MonoBehaviour
         }
         currentPierce++;
         
+        enemy.currentHp-= damage;
         
-        enemy.currentHp -= damage;
         UnityEngine.Debug.Log(currentPierce);
         if (currentPierce >= pierce)
         {
-            ProjectileDies();
+            AOEDies();
+            return;
         }
 
-        if (projectileCollisionBehavior != null)
-        {
-            projectileCollisionBehavior.OnCollision(this, enemy);
-        }
     }
 
-    public void ProjectileDies()
+
+    public void AOEDies()
     {
         gameObject.SetActive(false);
+        
     }
 
+    void Awake()
+    {
+        transform.localScale = new Vector3(size, size, size);
+
+    }
+
+    // Start is called before the first frame update
     void Start()
     {
-        projectileCollisionBehavior = GetComponent<ProjectileCollisionBehavior>();
+        
     }
 
     // Update is called once per frame
@@ -61,14 +65,10 @@ public class ProjectileController : MonoBehaviour
 
         if (lifetimeElapsed >= lifetime)
         {
-            ProjectileDies();
+            AOEDies();
             
             lifetimeElapsed = 0;
                 
         }
-        
-        //normalize before passing direction from TowerController
-        transform.position += direction * speed * Time.deltaTime;
-        
     }
 }

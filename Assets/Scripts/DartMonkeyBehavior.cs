@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class DartMonkeyBehavior : TowerBehavior
 {
+    
     public override void Attack(TowerController towerController)
     {
         ProjectileController projectileController = ProjectileManager.Spawn(transform, towerController.projectileID);
         
+        projectileController.damage = towerController.damage;
         
         Vector3 direction = towerController.bestEnemy.transform.position - transform.position;
         direction.Normalize();
