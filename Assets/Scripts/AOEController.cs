@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AOEController : MonoBehaviour
+public class AOEController : MonoBehaviour, Ignorable, ICollidable
 {
     public int pierce;
     public int currentPierce;
@@ -20,6 +20,11 @@ public class AOEController : MonoBehaviour
         ignoreEnemyList.Clear();
     }   
     
+    public void AddEnemyToIgnoreList(EnemyController enemy)
+    {
+        ignoreEnemyList.Add(enemy);
+    }
+
     public void OnHit(EnemyController enemy)
     {
         if(ignoreEnemyList.Contains(enemy))

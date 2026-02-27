@@ -85,33 +85,27 @@ public class EnemyController : MonoBehaviour
         //collider.gameObject
         Debug.Log("GameObject1 collided with " + collider.name);
         //check its a projectile to do damage
-        ProjectileController projectileController = collider.gameObject.GetComponentInParent<ProjectileController>();
-        AOEController aoeController = collider.gameObject.GetComponentInParent<AOEController>();
+        ICollidable collidable = collider.gameObject.GetComponentInParent<ICollidable>();
         
-        if (projectileController != null)
+        
+        if (collidable == null)
         {   
-            projectileController.OnHit(this);    
-        }
-        else if (aoeController != null)
-        {
-            aoeController.OnHit(this);
-        }
-        else
-        {
             UnityEngine.Debug.Log("hit by non projectile or AOE");
             return;
         }
-        
+        collidable.OnHit(this);
+
         if (currentHp <= 0){
             gameObject.SetActive(false);
-            if (projectileController != null)
-            {   
-                EnemyManager.Instance.EnemyDies(this, projectileController);  
-            }
-            else if (aoeController != null)
+            if (collidable is Ignorable ignorable)
             {
-                EnemyManager.Instance.EnemyDies(this, aoeController);
+                EnemyManager.Instance.EnemyDies(this, collidable);  
             }
+            else
+            {
+                UnityEngine.Debug.Log("explodes");
+            }
+            
             
             GameManager.Instance.AddMoney(moneyValue);
         }

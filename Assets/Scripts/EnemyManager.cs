@@ -41,7 +41,7 @@ public class EnemyManager : MonoBehaviour
     //bug - two red - shot - one survived !!!!!
 
 
-    public void EnemyDies(EnemyController enemy, ProjectileController ignoreProjectile)
+    public void EnemyDies(EnemyController enemy, Ignorable ignoreProjectile)
     {
         
         // currentHP <= 0 // 
@@ -56,38 +56,11 @@ public class EnemyManager : MonoBehaviour
             // effectively move to next layer of balloon
             EnemyID lesserEnemy = (EnemyID) nextEnemyID - excessDamage; 
             
-            //UnityEngine.Debug.Log(lesserEnemy);
-            EnemyController newEnemy = Spawn(lesserEnemy, enemy.gameObject.transform.position);
-            newEnemy.currentIndex = enemy.currentIndex;
-            newEnemy.currentWaypoint = enemy.currentWaypoint;
-            ignoreProjectile.ignoreEnemyList.Add(newEnemy);
-
-        }
-        //dies remove from active list
-        // can force spawn or auto spawn - 
-        
-    }
-
-    public void EnemyDies(EnemyController enemy, AOEController ignoreAOE)
-    {
-        
-        // currentHP <= 0 // 
-        int nextEnemyID = (int) enemy.enemyID - 1;
-        
-        int excessDamage = enemy.currentHp * -1;
-        // effectively reduces enemyID to check damage
-        bool hasLesserEnemy = nextEnemyID - excessDamage >= 0;
-        
-        if (hasLesserEnemy) 
-        {
-            // effectively move to next layer of balloon
-            EnemyID lesserEnemy = (EnemyID) nextEnemyID - excessDamage; 
             
-            //UnityEngine.Debug.Log(lesserEnemy);
             EnemyController newEnemy = Spawn(lesserEnemy, enemy.gameObject.transform.position);
             newEnemy.currentIndex = enemy.currentIndex;
             newEnemy.currentWaypoint = enemy.currentWaypoint;
-            ignoreAOE.ignoreEnemyList.Add(newEnemy);
+            ignoreProjectile.AddEnemyToIgnoreList(newEnemy);
 
         }
         //dies remove from active list

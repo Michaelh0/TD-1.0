@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileController : MonoBehaviour
+public class ProjectileController : MonoBehaviour, Ignorable, ICollidable
 {
     // Start is called before the first frame update
     public Vector3 direction;
@@ -22,6 +22,11 @@ public class ProjectileController : MonoBehaviour
     }   
     // initialize projectile so tower can talk to projectile
     
+    public void AddEnemyToIgnoreList(EnemyController enemy)
+    {
+        ignoreEnemyList.Add(enemy);
+    }
+
     public void OnHit(EnemyController enemy)
     {
         if(ignoreEnemyList.Contains(enemy))
