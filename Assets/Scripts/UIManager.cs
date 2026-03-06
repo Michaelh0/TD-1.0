@@ -34,26 +34,32 @@ public class UIManager : MonoBehaviour
 
     public enum UIMode{
         defaultMode,
-        towerMode,
+        placeTowerMode,
+        upgradeTowerMode,
     }
 
     public static UIManager Instance {get; set;}
 
     private Camera cam;
     
-    public Button[] buttons;
+    public Button[] towerButtons;
+    public Button[] upgradeButtons;
+    public Button leftOrientationButton;
+    public Button rightOrientationButton;
     public Button restartButton;
     public Button button2x;
 
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI livesText;
     public GameObject gameOverPanel;
+    public GameObject upgradePanel;
 
     public float towerSize;
     public GameObject towerBlueprint;
     
-    public TowerButtonData currentTowerButtonData;
+    public TowerButtonData selectedTowerButtonData;
     
+    public TowerController selectedTowerController;
 
     public UIMode currentMode;
 
@@ -68,23 +74,29 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+
         cam = Camera.main;
         GameObject[] towers = SpawnManager.Instance.prefabs[(int)SpawnManager.SpawnID.tower].listOfGameObjects;
-        for (int i = 0; i < buttons.Length; i++)
+        for (int i = 0; i < towerButtons.Length; i++)
         {
             if (towers.Length > 0 && i < towers.Length)
             {
                 //has a tower
                 TowerController towerController = towers[i].GetComponent<TowerController>();
                 TowerButtonData towerdata = new TowerButtonData(i, towerController.towerCost);
-                buttons[i].onClick.AddListener(() => TowerSpawn(towerdata));
+                towerButtons[i].onClick.AddListener(() => TowerSpawn(towerdata));
             }
             
-            
-            
-            
         }
+
+        for (int i = 0; i < upgradeButtons.Length; i++)
+        {
+            int index = i;
+            upgradeButtons[i].onClick.AddListener(() => TowerUpgrade(index));
+        }
+
         gameOverPanel.SetActive(false);
+        upgradePanel.SetActive(false);
         restartButton.onClick.AddListener(() => GameManager.Instance.Restart());
         button2x.onClick.AddListener(() => GameManager.Instance.ChangeTimeScale());
     }
@@ -94,53 +106,95 @@ public class UIManager : MonoBehaviour
     {
         switch(currentMode)
         {
-            case UIMode.towerMode:
-                
-                //get mouse position on screen to TRY to place tower
-                Vector3 mousePos = Input.mousePosition;
-        
-                Vector3 point = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.nearClipPlane));
-                point.z = 0;
-                //Debug.Log("Position = " + point);
+            case UIMode.placeTowerMode:
+            {
+                Vector3 worldMousePosition = GetWorldMousePosition();
 
-                towerBlueprint.transform.position = point;
+                towerBlueprint.transform.position = worldMousePosition;
 
                 LayerMask placeableZoneMask = LayerMask.GetMask("Placeable Zone");
 
-                Vector2 origin = new Vector2(point.x, point.y);
+                LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
 
-                RaycastHit2D hit = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, placeableZoneMask, -Mathf.Infinity, Mathf.Infinity);
+                Vector2 origin = new Vector2(worldMousePosition.x, worldMousePosition.y);
 
-                //change color
+                RaycastHit2D areaQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, placeableZoneMask, -Mathf.Infinity, Mathf.Infinity);
 
-                ColorShift(hit);
+                RaycastHit2D towerQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, towerZoneMask, -Mathf.Infinity, Mathf.Infinity);
+                
+                TowerBlueprintColorShift(areaQuery.collider == null || towerQuery.collider != null);  
+
+                
+                
                 //left click
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if(hit.collider != null)
+                    if(areaQuery.collider != null && towerQuery.collider == null)
                     {
-                        GameManager.Instance.ReduceMoney(currentTowerButtonData.towerCost);
-                        Debug.Log("collided with = " + hit);
+                        GameManager.Instance.ReduceMoney(selectedTowerButtonData.towerCost);
+                        Debug.Log("collided with = " + areaQuery);
                         //SpawnManager.Spawn(SpawnManager.SpawnID.towerID, 0, point);
-                        TowerManager.Spawn(currentTowerButtonData.towerID, point);
+                        TowerManager.Spawn(selectedTowerButtonData.towerID, worldMousePosition);
                         //plz don't press tower we dont have 
                         currentMode = UIMode.defaultMode;
                         towerBlueprint.SetActive(false);
                     }
-                    //Debug.Log("hit collider = " + hit.collider);
-                }
                     
+                }
+            }        
                 break;
             
-            default:
+            case UIMode.upgradeTowerMode:
+
+            case UIMode.defaultMode:
+            {
+                Vector3 worldMousePosition = GetWorldMousePosition();
+
+                LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
+
+                Vector2 origin = new Vector2(worldMousePosition.x, worldMousePosition.y);
+
+                RaycastHit2D towerQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, towerZoneMask, -Mathf.Infinity, Mathf.Infinity);
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if(towerQuery.collider != null)
+                    {
+                        selectedTowerController = towerQuery.collider.gameObject.GetComponentInParent<TowerController>();
+                        currentMode = UIMode.upgradeTowerMode;
+                        upgradePanel.SetActive(true);
+                        
+                        Debug.Log("collided with = " + selectedTowerController.gameObject.name);
+                    }
+                    
+                }
+            }
                 break;
         }
 
     }
 
-    public bool CanBuyTower(TowerButtonData towerButtonData)
+    public Vector3 GetWorldMousePosition()
     {
-        return GameManager.Instance.currentCurrency >= towerButtonData.towerCost;
+        Vector3 mousePos = Input.mousePosition;
+        
+        Vector3 worldMousePosition = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.nearClipPlane));
+        worldMousePosition.z = 0;
+        return worldMousePosition;
+    }
+
+    public void GameOverUI()
+    {
+        FreezeUI();
+        gameOverPanel.SetActive(true);
+    }
+
+    public void FreezeUI()
+    {
+        for (int i = 0; i < towerButtons.Length; i++)
+        {
+            towerButtons[i].interactable = false;
+        }
     }
 
     public void UpdateMoney(int money)
@@ -153,6 +207,17 @@ public class UIManager : MonoBehaviour
         livesText.text = "Lives: " + lives.ToString();
     }
 
+    public bool CanBuyTower(TowerButtonData towerButtonData)
+    {
+        return GameManager.Instance.currentCurrency >= towerButtonData.towerCost;
+    }
+
+    public void TowerUpgrade(int index)
+    {
+        Debug.Log("path is " + (index + 1).ToString());
+        Debug.Log("selected tower: " + selectedTowerController.gameObject.name);
+    }
+    
     public void TowerSpawn(TowerButtonData towerButtonData)
     {
         //Output this to console when the Button3 is clicked
@@ -162,39 +227,19 @@ public class UIManager : MonoBehaviour
         }
             
         
-        currentTowerButtonData = towerButtonData;
-        currentMode = UIMode.towerMode;
+        selectedTowerButtonData = towerButtonData;
+        currentMode = UIMode.placeTowerMode;
         Debug.Log("Button clicked = " + towerButtonData.towerID);
         towerBlueprint.SetActive(true);
         
     }
-    public void GameOverUI(){
-        FreezeUI();
-        gameOverPanel.SetActive(true);
-    }
-    
 
-    public void FreezeUI()
-    {
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            //buttons[i].SetEnabled(false); - UIElements.Button rather than UI.Button
-            //https://docs.unity3d.com/ScriptReference/UIElements.Button.html
-
-
-
-            //https://docs.unity3d.com/530/Documentation/ScriptReference/UI.Button.html older Version 5.3
-            //where button inherits interactable variable from UI.Selectable
-            buttons[i].interactable = false;
-        }
-    }
-
-    public void ColorShift(RaycastHit2D hit)
+    public void TowerBlueprintColorShift(bool isRed)
     {
         SpriteRenderer towerBlueprintSpriteRenderer = towerBlueprint.gameObject.GetComponentInChildren<SpriteRenderer>();
 
         float alphaValue = towerBlueprintSpriteRenderer.color.a;
-        if(hit.collider == null)
+        if(isRed)
         {
             //change to red
             towerBlueprintSpriteRenderer.color = Color.red;

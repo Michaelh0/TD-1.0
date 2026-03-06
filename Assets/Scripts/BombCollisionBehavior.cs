@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class BombCollisionBehavior : ProjectileCollisionBehavior
 {
-    public override void OnCollision(ProjectileController projectileController, EnemyController enemyController)
+    public override void OnCollision(ProjectileController projectileController)
     {
-        AOEController aoeController = AOEManager.Spawn(enemyController.transform.position, AOEManager.AOEID.bomb);
+        AOEController aoeController = AOEManager.Spawn(projectileController, AOEManager.AOEID.bomb);
         aoeController.ignoreEnemyList.AddRange(projectileController.ignoreEnemyList);
     }
 }

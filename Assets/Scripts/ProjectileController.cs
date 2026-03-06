@@ -20,8 +20,13 @@ public class ProjectileController : MonoBehaviour, Ignorable, ICollidable
         currentPierce = 0;
         ignoreEnemyList.Clear();
     }   
-    // initialize projectile so tower can talk to projectile
-    
+    // initialize projectile so tower can talk to projectile   
+
+    public void InitializeProjectile(TowerController towerController)
+    {
+        damage = towerController.damage;
+    }   
+
     public void AddEnemyToIgnoreList(EnemyController enemy)
     {
         ignoreEnemyList.Add(enemy);
@@ -33,20 +38,25 @@ public class ProjectileController : MonoBehaviour, Ignorable, ICollidable
         {
             return;
         }
+        
+        bool hasCollisionBehavior = projectileCollisionBehavior != null;
+        if (hasCollisionBehavior)
+        {
+            projectileCollisionBehavior.OnCollision(this);
+        }
+        else
+        {
+            enemy.currentHp -= damage;
+        }
+        
         currentPierce++;
-        
-        
-        enemy.currentHp -= damage;
-        UnityEngine.Debug.Log(currentPierce);
+        //UnityEngine.Debug.Log(currentPierce);
         if (currentPierce >= pierce)
         {
             ProjectileDies();
         }
 
-        if (projectileCollisionBehavior != null)
-        {
-            projectileCollisionBehavior.OnCollision(this, enemy);
-        }
+        
     }
 
     public void ProjectileDies()
@@ -57,6 +67,7 @@ public class ProjectileController : MonoBehaviour, Ignorable, ICollidable
     void Start()
     {
         projectileCollisionBehavior = GetComponent<ProjectileCollisionBehavior>();
+        
     }
 
     // Update is called once per frame

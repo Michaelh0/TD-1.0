@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ProjectileCollisionBehavior : MonoBehaviour
 {
-    public virtual void OnCollision(ProjectileController projectileController, EnemyController enemyController)
+    public virtual void OnCollision(ProjectileController projectileController)
     {
         UnityEngine.Debug.Log("Implement Me");
     }

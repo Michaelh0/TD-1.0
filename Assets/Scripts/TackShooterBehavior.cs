@@ -14,7 +14,7 @@ public class TackShooterBehavior : TowerBehavior
 
         for (int i = 0; i < numOfProjectiles; i++){
             
-            ProjectileController projectileController = ProjectileManager.Spawn(transform, towerController.projectileID);
+            ProjectileController projectileController = ProjectileManager.Spawn(towerController, towerController.projectileID);
             
             Vector3 direction = Vector3.right;
 

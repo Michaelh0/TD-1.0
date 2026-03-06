@@ -99,7 +99,7 @@ public class EnemyController : MonoBehaviour
             gameObject.SetActive(false);
             if (collidable is Ignorable ignorable)
             {
-                EnemyManager.Instance.EnemyDies(this, collidable);  
+                EnemyManager.Instance.EnemyDies(this, ignorable);  
             }
             else
             {

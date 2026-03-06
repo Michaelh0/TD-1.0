@@ -12,11 +12,11 @@ public class AOEManager : MonoBehaviour
     public static AOEManager Instance {get; set;}
 
     //copy from spawn in enemy manager to have multiple ProjectileIDs - repeat for FUTURE tower manager
-    public static AOEController Spawn(Vector3 position, AOEID aoeID)
+    public static AOEController Spawn(ProjectileController projectileController, AOEID aoeID)
     {
         //start set up in unity
         
-        GameObject aoeGameObject = SpawnManager.Spawn(SpawnManager.SpawnID.AOE, (int) aoeID, position);
+        GameObject aoeGameObject = SpawnManager.Spawn(SpawnManager.SpawnID.AOE, (int) aoeID, projectileController.transform.position);
         AOEController aoeController = aoeGameObject.GetComponent<AOEController>();
         
 
@@ -27,6 +27,7 @@ public class AOEManager : MonoBehaviour
             aoeGameObject.name = "AOE " + Instance.areaOfEffects.Count.ToString();
         }
         aoeController.OnSpawn();
+        aoeController.InitializeAOE(projectileController);
         return aoeController;
     }
     

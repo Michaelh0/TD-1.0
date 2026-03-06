@@ -29,7 +29,9 @@ public class EnemyManager : MonoBehaviour
             enemyController.waypointManager = Instance.waypointManager;
             Instance.enemies.Add(enemyController);
             
-            enemy.name = "Enemy " + Instance.enemies.Count.ToString();
+            int enemyCount = SpawnManager.Instance.worldObjects[SpawnManager.SpawnID.enemy][(int)enemyID].Count;
+
+            enemy.name = enemyID + " " + enemyCount.ToString();
         }
         
         enemyController.OnSpawn(enemyID);

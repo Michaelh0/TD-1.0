@@ -20,6 +20,11 @@ public class AOEController : MonoBehaviour, Ignorable, ICollidable
         ignoreEnemyList.Clear();
     }   
     
+    public void InitializeAOE(ProjectileController projectileController)
+    {
+        damage = projectileController.damage;
+    }
+
     public void AddEnemyToIgnoreList(EnemyController enemy)
     {
         ignoreEnemyList.Add(enemy);
