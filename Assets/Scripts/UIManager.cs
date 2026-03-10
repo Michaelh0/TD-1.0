@@ -51,6 +51,8 @@ public class UIManager : MonoBehaviour
 
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI livesText;
+    public TextMeshProUGUI towerNameText;
+    public TextMeshProUGUI numOfPopsText;
     public GameObject gameOverPanel;
     public GameObject upgradePanel;
 
@@ -85,6 +87,12 @@ public class UIManager : MonoBehaviour
                 TowerController towerController = towers[i].GetComponent<TowerController>();
                 TowerButtonData towerdata = new TowerButtonData(i, towerController.towerCost);
                 towerButtons[i].onClick.AddListener(() => TowerSpawn(towerdata));
+                TextMeshProUGUI towerName = towerButtons[i].gameObject.GetComponentInChildren<TextMeshProUGUI>();
+                towerName.text = towerController.towerID.ToString();
+            }
+            else
+            {
+                towerButtons[i].interactable = false;
             }
             
         }
@@ -163,7 +171,8 @@ public class UIManager : MonoBehaviour
                         selectedTowerController = towerQuery.collider.gameObject.GetComponentInParent<TowerController>();
                         currentMode = UIMode.upgradeTowerMode;
                         upgradePanel.SetActive(true);
-                        
+                        UpdateTowerName(selectedTowerController.towerID.ToString());
+                        UpdateNumOfPops(selectedTowerController.numOfPops);
                         Debug.Log("collided with = " + selectedTowerController.gameObject.name);
                     }
                     
@@ -205,6 +214,16 @@ public class UIManager : MonoBehaviour
     public void UpdateLives(int lives)
     {
         livesText.text = "Lives: " + lives.ToString();
+    }
+
+    public void UpdateTowerName(string towerName)
+    {
+        towerNameText.text = towerName;
+    }
+
+    public void UpdateNumOfPops(int pops)
+    {
+        numOfPopsText.text = "Pops: " + pops.ToString();
     }
 
     public bool CanBuyTower(TowerButtonData towerButtonData)

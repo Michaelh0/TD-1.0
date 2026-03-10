@@ -14,6 +14,8 @@ public class ProjectileController : MonoBehaviour, Ignorable, ICollidable
     public int damage;
     public List<EnemyController> ignoreEnemyList;
     public ProjectileCollisionBehavior projectileCollisionBehavior;
+    //back call currently used for counting pops
+    public TowerController towerController;
     
     public void OnSpawn()
     {
@@ -25,6 +27,7 @@ public class ProjectileController : MonoBehaviour, Ignorable, ICollidable
     public void InitializeProjectile(TowerController towerController)
     {
         damage = towerController.damage;
+        this.towerController = towerController;
     }   
 
     public void AddEnemyToIgnoreList(EnemyController enemy)
@@ -47,6 +50,7 @@ public class ProjectileController : MonoBehaviour, Ignorable, ICollidable
         else
         {
             enemy.currentHp -= damage;
+            UpdatePops();
         }
         
         currentPierce++;
@@ -62,6 +66,12 @@ public class ProjectileController : MonoBehaviour, Ignorable, ICollidable
     public void ProjectileDies()
     {
         gameObject.SetActive(false);
+    }
+
+    public void UpdatePops()
+    {
+        towerController.numOfPops ++;
+        UIManager.Instance.UpdateNumOfPops(towerController.numOfPops);
     }
 
     void Start()

@@ -51,6 +51,7 @@ MonoBehaviour:
   lastAttackTime: 0
   towerCost: 260
   projectileID: 1
+  towerID: 1
   towerBehavior: {fileID: 0}
   bestEnemy: {fileID: 0}
   damage: 1

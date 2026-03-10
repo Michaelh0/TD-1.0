@@ -9,9 +9,11 @@ public class TowerController : MonoBehaviour
     public float lastAttackTime;
     public int towerCost;
     public ProjectileManager.ProjectileID projectileID;
+    public TowerManager.TowerID towerID;
     public TowerBehavior towerBehavior;
     public EnemyController bestEnemy;
     public int damage;
+    public int numOfPops;
     
     
     // Start is called before the first frame update

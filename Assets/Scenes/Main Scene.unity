@@ -3697,7 +3697,7 @@ GameObject:
   - component: {fileID: 750924121}
   - component: {fileID: 750924120}
   m_Layer: 5
-  m_Name: Number of Pops
+  m_Name: Num of Pops
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3743,7 +3743,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Number of Pops
+  m_text: Num of Pops
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7893,6 +7893,8 @@ MonoBehaviour:
   button2x: {fileID: 892287866}
   moneyText: {fileID: 374734194}
   livesText: {fileID: 1040276102}
+  towerNameText: {fileID: 1334445034}
+  numOfPopsText: {fileID: 750924120}
   gameOverPanel: {fileID: 1935294701}
   upgradePanel: {fileID: 1371440947}
   towerSize: 0.01

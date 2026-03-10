@@ -11,6 +11,7 @@ public class AOEController : MonoBehaviour, Ignorable, ICollidable
     public float lifetime;
     public float lifetimeElapsed;
     public List<EnemyController> ignoreEnemyList;
+    public ProjectileController projectileController;
 
     //possibly add queue if i want to regulate which enemy is prioritized
 
@@ -23,6 +24,7 @@ public class AOEController : MonoBehaviour, Ignorable, ICollidable
     public void InitializeAOE(ProjectileController projectileController)
     {
         damage = projectileController.damage;
+        this.projectileController = projectileController;
     }
 
     public void AddEnemyToIgnoreList(EnemyController enemy)
@@ -40,6 +42,8 @@ public class AOEController : MonoBehaviour, Ignorable, ICollidable
         
         enemy.currentHp-= damage;
         
+        
+        projectileController.UpdatePops();
         UnityEngine.Debug.Log(currentPierce);
         if (currentPierce >= pierce)
         {
