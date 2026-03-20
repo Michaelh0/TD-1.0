@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4269263441113741673}
   - component: {fileID: 363916545465075142}
-  - component: {fileID: 2592625297210523121}
   m_Layer: 6
   m_Name: BombTower
   m_TagString: Untagged
@@ -52,21 +51,12 @@ MonoBehaviour:
   towerCost: 320
   projectileID: 2
   towerID: 2
-  towerBehavior: {fileID: 0}
   bestEnemy: {fileID: 0}
   damage: 1
---- !u!114 &2592625297210523121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 610347537156833822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e903c9b7248fa0c45a8410b7dd2021d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  numOfPops: 0
+  pierce: 20
+  towerUpgradeGroup: {fileID: 11400000, guid: d4835c939eca2df469cfae78b84d92c4, type: 2}
+  towerUpgradeIndices: 
 --- !u!1 &7780907320225740724
 GameObject:
   m_ObjectHideFlags: 0

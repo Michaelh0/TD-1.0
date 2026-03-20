@@ -53,6 +53,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI towerNameText;
     public TextMeshProUGUI numOfPopsText;
+    public TextMeshProUGUI[] currentPathText;
     public GameObject gameOverPanel;
     public GameObject upgradePanel;
 
@@ -60,7 +61,7 @@ public class UIManager : MonoBehaviour
     public GameObject towerBlueprint;
     
     public TowerButtonData selectedTowerButtonData;
-    
+    public List<TowerButtonData> towerButtonDataList;
     public TowerController selectedTowerController;
 
     public UIMode currentMode;
@@ -76,19 +77,22 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-
+        towerButtonDataList = new List<TowerButtonData>();
         cam = Camera.main;
         GameObject[] towers = SpawnManager.Instance.prefabs[(int)SpawnManager.SpawnID.tower].listOfGameObjects;
         for (int i = 0; i < towerButtons.Length; i++)
         {
+            
             if (towers.Length > 0 && i < towers.Length)
             {
                 //has a tower
                 TowerController towerController = towers[i].GetComponent<TowerController>();
-                TowerButtonData towerdata = new TowerButtonData(i, towerController.towerCost);
-                towerButtons[i].onClick.AddListener(() => TowerSpawn(towerdata));
+                TowerButtonData towerButtonData = new TowerButtonData(i, towerController.towerCost);
+                towerButtons[i].onClick.AddListener(() => TowerSpawn(towerButtonData));
                 TextMeshProUGUI towerName = towerButtons[i].gameObject.GetComponentInChildren<TextMeshProUGUI>();
-                towerName.text = towerController.towerID.ToString();
+                towerName.text = towerController.towerID.ToString() + "\n" + towerController.towerCost.ToString();
+                towerButtonDataList.Add(towerButtonData);
+                
             }
             else
             {
@@ -96,11 +100,12 @@ public class UIManager : MonoBehaviour
             }
             
         }
+        
 
         for (int i = 0; i < upgradeButtons.Length; i++)
         {
             int index = i;
-            upgradeButtons[i].onClick.AddListener(() => TowerUpgrade(index));
+            upgradeButtons[i].onClick.AddListener(() => UpgradeTower(index));
         }
 
         gameOverPanel.SetActive(false);
@@ -141,9 +146,9 @@ public class UIManager : MonoBehaviour
                     {
                         GameManager.Instance.ReduceMoney(selectedTowerButtonData.towerCost);
                         Debug.Log("collided with = " + areaQuery);
-                        //SpawnManager.Spawn(SpawnManager.SpawnID.towerID, 0, point);
+                        
                         TowerManager.Spawn(selectedTowerButtonData.towerID, worldMousePosition);
-                        //plz don't press tower we dont have 
+                        
                         currentMode = UIMode.defaultMode;
                         towerBlueprint.SetActive(false);
                     }
@@ -173,6 +178,7 @@ public class UIManager : MonoBehaviour
                         upgradePanel.SetActive(true);
                         UpdateTowerName(selectedTowerController.towerID.ToString());
                         UpdateNumOfPops(selectedTowerController.numOfPops);
+                        UpdateCurrentPaths(selectedTowerController);
                         Debug.Log("collided with = " + selectedTowerController.gameObject.name);
                     }
                     
@@ -209,6 +215,7 @@ public class UIManager : MonoBehaviour
     public void UpdateMoney(int money)
     {
         moneyText.text = "Money: " + money.ToString();
+        UpdateTowerButton();
     }
 
     public void UpdateLives(int lives)
@@ -226,14 +233,68 @@ public class UIManager : MonoBehaviour
         numOfPopsText.text = "Pops: " + pops.ToString();
     }
 
+    public void UpdateTowerButton()
+    {   
+        
+        for (int i = 0; i < towerButtonDataList.Count; i++)
+        {
+            towerButtons[i].interactable = CanBuyTower(towerButtonDataList[i]);    
+        }
+    }
+
+    public void UpdateCurrentPaths(TowerController towerController)
+    {
+        int numOfPaths = 3;
+        for(int pathIndex = 0; pathIndex < numOfPaths; pathIndex++)
+        {
+            int towerUpgradeIndex = towerController.towerUpgradeIndices[pathIndex];
+
+            currentPathText[pathIndex].text = towerUpgradeIndex.ToString();
+
+            TowerUpgrade currentTowerUpgrade = towerController.GetTowerUpgrade(pathIndex);
+            
+            TextMeshProUGUI upgradeName = upgradeButtons[pathIndex].gameObject.GetComponentInChildren<TextMeshProUGUI>();
+            if(currentTowerUpgrade == null)
+            {
+                upgradeName.text = "Upgrade Complete";
+                continue;
+            }
+            upgradeName.text = currentTowerUpgrade.upgradeCost.ToString();
+        }
+        
+    }
+
+    public void UpdateNumOfPops(TowerController towerController)
+    {
+        if (towerController != selectedTowerController)
+        {
+            return;
+        }
+        UpdateNumOfPops(towerController.numOfPops);
+    }
+
     public bool CanBuyTower(TowerButtonData towerButtonData)
     {
         return GameManager.Instance.currentCurrency >= towerButtonData.towerCost;
     }
 
-    public void TowerUpgrade(int index)
+    public bool CanBuyUpgrade(TowerUpgrade towerUpgrade)
     {
-        Debug.Log("path is " + (index + 1).ToString());
+        return GameManager.Instance.currentCurrency >= towerUpgrade.upgradeCost;
+    }
+
+    public void UpgradeTower(int pathIndex)
+    {
+        TowerUpgrade currentTowerUpgrade = selectedTowerController.GetTowerUpgrade(pathIndex);
+
+        if (currentTowerUpgrade == null || !CanBuyUpgrade(currentTowerUpgrade)){
+            return;
+        }
+        GameManager.Instance.ReduceMoney(currentTowerUpgrade.upgradeCost);
+        selectedTowerController.UpgradeTower(currentTowerUpgrade);
+        selectedTowerController.IncrementUpgradeIndex(pathIndex);
+        UpdateCurrentPaths(selectedTowerController);
+        Debug.Log("path is " + (pathIndex + 1).ToString());
         Debug.Log("selected tower: " + selectedTowerController.gameObject.name);
     }
     

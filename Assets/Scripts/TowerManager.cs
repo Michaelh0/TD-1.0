@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TowerManager : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class TowerManager : MonoBehaviour
         {
             Instance.towers.Add(towerController);
             towerGameObject.name = "Tower " + Instance.towers.Count.ToString();
+            towerController.towerBehavior = towerBehaviorsDict[(TowerID)towerType].Invoke();
         }
         //towerController.OnSpawn();
 
@@ -34,6 +36,12 @@ public class TowerManager : MonoBehaviour
     }
 
     public List<TowerController> towers;
+    public static Dictionary<TowerID, Func<TowerBehavior>> towerBehaviorsDict = new Dictionary<TowerID, Func<TowerBehavior>>()
+    {
+        {TowerID.dartMonkey, () => new DartMonkeyBehavior()},
+        {TowerID.tackShooter, () => new TackShooterBehavior()},
+        {TowerID.bombTower, () => new BombTowerBehavior()},
+    };
 
     private void Awake()
     {

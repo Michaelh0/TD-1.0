@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8151870527190779818}
   - component: {fileID: 8915220442991347908}
-  - component: {fileID: 2445843877625846744}
   m_Layer: 6
   m_Name: TackShooter
   m_TagString: Untagged
@@ -52,22 +51,12 @@ MonoBehaviour:
   towerCost: 260
   projectileID: 1
   towerID: 1
-  towerBehavior: {fileID: 0}
   bestEnemy: {fileID: 0}
   damage: 1
---- !u!114 &2445843877625846744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2438373903152545508}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4128357389ce54b43830862fc2a67ffb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numOfProjectiles: 8
+  numOfPops: 0
+  pierce: 1
+  towerUpgradeGroup: {fileID: 11400000, guid: 93cbf0e33245fdd43aeb5da4e9244c72, type: 2}
+  towerUpgradeIndices: 
 --- !u!1 &3927438712548453709
 GameObject:
   m_ObjectHideFlags: 0

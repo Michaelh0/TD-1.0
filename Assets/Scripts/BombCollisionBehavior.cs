@@ -8,5 +8,6 @@ public class BombCollisionBehavior : ProjectileCollisionBehavior
     {
         AOEController aoeController = AOEManager.Spawn(projectileController, AOEManager.AOEID.bomb);
         aoeController.ignoreEnemyList.AddRange(projectileController.ignoreEnemyList);
+        projectileController.ProjectileDies();
     }
 }

@@ -11,7 +11,7 @@ public class DartMonkeyBehavior : TowerBehavior
         
         
         
-        Vector3 direction = towerController.bestEnemy.transform.position - transform.position;
+        Vector3 direction = towerController.bestEnemy.transform.position - towerController.gameObject.transform.position;
         direction.Normalize();
 
         projectileController.direction = direction;

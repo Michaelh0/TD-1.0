@@ -14,6 +14,10 @@ public class TowerController : MonoBehaviour
     public EnemyController bestEnemy;
     public int damage;
     public int numOfPops;
+    public int pierce;
+    public TowerUpgradeGroup towerUpgradeGroup;
+
+    public int[] towerUpgradeIndices;
     
     
     // Start is called before the first frame update
@@ -25,8 +29,7 @@ public class TowerController : MonoBehaviour
         {
             return null;
         }
-            
-
+        
         EnemyController bestEnemy = null;
 
         //first best enemy is nearest to tower  CLOSE / farthest from tower:) 
@@ -55,13 +58,60 @@ public class TowerController : MonoBehaviour
         towerBehavior.Attack(this);
     }
 
-    
+    public void IncrementPops()
+    {
+        numOfPops++;
+        UIManager.Instance.UpdateNumOfPops(this);
+    }
 
+    public void IncrementUpgradeIndex(int pathIndex)
+    {
+        towerUpgradeIndices[pathIndex]++;
+    }
+
+
+    public void UpgradeTower(TowerUpgrade towerUpgrade)
+    {
+        range += towerUpgrade.range;
+
+        attackRate *= 1.0f - towerUpgrade.attackRateModifier;
+        
+        damage += towerUpgrade.damage;
+        projectileID = towerUpgrade.projectileID;
+
+        
+        
+        if(towerUpgrade.towerUpgradeComponent == null)
+        {
+            return;
+        }
+        towerUpgrade.towerUpgradeComponent.UpgradeTowerComponent(this);
+        
+    }
+
+    public TowerUpgrade GetTowerUpgrade(int pathIndex)
+    {
+        int currentUpgradeIndex = towerUpgradeIndices[pathIndex];
+
+        if(towerUpgradeGroup == null)
+        {
+            return null;
+        }
+
+        List<TowerUpgrade> selectedPath = towerUpgradeGroup.GetPath(pathIndex);
+
+        if(currentUpgradeIndex >= selectedPath.Count)
+        {
+            return null;
+        }
+        return selectedPath[currentUpgradeIndex];
+    }
 
     void Start()
     {
         lastAttackTime = attackRate;
-        towerBehavior = GetComponent<TowerBehavior>();
+        
+        towerUpgradeIndices = new int[3];
     }
 
     // Update is called once per frame

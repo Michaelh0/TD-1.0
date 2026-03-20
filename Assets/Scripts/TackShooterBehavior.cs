@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class TackShooterBehavior : TowerBehavior
 {
-    public int numOfProjectiles;
+    public int numOfProjectiles = 8;
     
-
     public override void Attack(TowerController towerController)
     {
 

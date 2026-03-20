@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WaveSpawner : MonoBehaviour
 {
+    //could have Wave as scriptable object
     [System.Serializable]
     public class Wave
     {
@@ -22,6 +23,8 @@ public class WaveSpawner : MonoBehaviour
 
     public float timeElapsed;
     public Wave currentWave;
+    //wave groups
+    //public int currentWaveGroupIndex;
     public int currentWaveIndex;
     public int currentSpawnIndex;
     public bool activeWave;
