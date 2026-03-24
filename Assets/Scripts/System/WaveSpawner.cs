@@ -23,7 +23,7 @@ public class WaveSpawner : MonoBehaviour
 
     public float timeElapsed;
     public Wave currentWave;
-    //wave groups
+    
     //public int currentWaveGroupIndex;
     public int currentWaveIndex;
     public int currentSpawnIndex;

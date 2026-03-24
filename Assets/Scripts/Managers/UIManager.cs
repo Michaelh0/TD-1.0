@@ -72,12 +72,12 @@ public class UIManager : MonoBehaviour
         {
             Instance = this;
         }
-
+        towerButtonDataList = new List<TowerButtonData>();
     }
 
     void Start()
     {
-        towerButtonDataList = new List<TowerButtonData>();
+        
         cam = Camera.main;
         GameObject[] towers = SpawnManager.Instance.prefabs[(int)SpawnManager.SpawnID.tower].listOfGameObjects;
         for (int i = 0; i < towerButtons.Length; i++)
@@ -87,16 +87,14 @@ public class UIManager : MonoBehaviour
             {
                 //has a tower
                 TowerController towerController = towers[i].GetComponent<TowerController>();
-                TowerButtonData towerButtonData = new TowerButtonData(i, towerController.towerCost);
-                towerButtons[i].onClick.AddListener(() => TowerSpawn(towerButtonData));
-                TextMeshProUGUI towerName = towerButtons[i].gameObject.GetComponentInChildren<TextMeshProUGUI>();
-                towerName.text = towerController.towerID.ToString() + "\n" + towerController.towerCost.ToString();
-                towerButtonDataList.Add(towerButtonData);
+
+                InitializeTowerButton(i,towerController);
                 
             }
             else
             {
-                towerButtons[i].interactable = false;
+                //towerButtons[i].interactable = false;
+                towerButtons[i].gameObject.SetActive(false);
             }
             
         }
@@ -129,7 +127,7 @@ public class UIManager : MonoBehaviour
 
                 LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
 
-                Vector2 origin = new Vector2(worldMousePosition.x, worldMousePosition.y);
+                Vector2 origin = GetWorldMouseOrigin(worldMousePosition);
 
                 RaycastHit2D areaQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, placeableZoneMask, -Mathf.Infinity, Mathf.Infinity);
 
@@ -145,8 +143,6 @@ public class UIManager : MonoBehaviour
                     if(areaQuery.collider != null && towerQuery.collider == null)
                     {
                         GameManager.Instance.ReduceMoney(selectedTowerButtonData.towerCost);
-                        Debug.Log("collided with = " + areaQuery);
-                        
                         TowerManager.Spawn(selectedTowerButtonData.towerID, worldMousePosition);
                         
                         currentMode = UIMode.defaultMode;
@@ -165,23 +161,16 @@ public class UIManager : MonoBehaviour
 
                 LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
 
-                Vector2 origin = new Vector2(worldMousePosition.x, worldMousePosition.y);
+                Vector2 origin = GetWorldMouseOrigin(worldMousePosition);
 
                 RaycastHit2D towerQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, towerZoneMask, -Mathf.Infinity, Mathf.Infinity);
 
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0))//
                 {
                     if(towerQuery.collider != null)
                     {
-                        selectedTowerController = towerQuery.collider.gameObject.GetComponentInParent<TowerController>();
-                        currentMode = UIMode.upgradeTowerMode;
-                        upgradePanel.SetActive(true);
-                        UpdateTowerName(selectedTowerController.towerID.ToString());
-                        UpdateNumOfPops(selectedTowerController.numOfPops);
-                        UpdateCurrentPaths(selectedTowerController);
-                        Debug.Log("collided with = " + selectedTowerController.gameObject.name);
+                        UpgradePanelUI(towerQuery);
                     }
-                    
                 }
             }
                 break;
@@ -189,6 +178,11 @@ public class UIManager : MonoBehaviour
 
     }
 
+    public Vector2 GetWorldMouseOrigin(Vector3 worldMousePosition)
+    {
+        return new Vector2(worldMousePosition.x, worldMousePosition.y);
+    }
+    
     public Vector3 GetWorldMousePosition()
     {
         Vector3 mousePos = Input.mousePosition;
@@ -233,6 +227,17 @@ public class UIManager : MonoBehaviour
         numOfPopsText.text = "Pops: " + pops.ToString();
     }
 
+    public void InitializeTowerButton(int towerIndex, TowerController towerController)
+    {
+        TowerButtonData towerButtonData = new TowerButtonData(towerIndex, towerController.towerCost);
+        towerButtons[towerIndex].onClick.AddListener(() => TowerSpawn(towerButtonData));
+
+        TextMeshProUGUI towerName = towerButtons[towerIndex].gameObject.GetComponentInChildren<TextMeshProUGUI>();
+        towerName.text = towerController.towerID.ToString() + "\n" + towerController.towerCost.ToString();
+
+        towerButtonDataList.Add(towerButtonData);
+    }
+
     public void UpdateTowerButton()
     {   
         
@@ -241,7 +246,16 @@ public class UIManager : MonoBehaviour
             towerButtons[i].interactable = CanBuyTower(towerButtonDataList[i]);    
         }
     }
-
+    public void UpgradePanelUI(RaycastHit2D towerQuery)
+    {
+        selectedTowerController = towerQuery.collider.gameObject.GetComponentInParent<TowerController>();
+        currentMode = UIMode.upgradeTowerMode;
+        upgradePanel.SetActive(true);
+        UpdateTowerName(selectedTowerController.towerID.ToString());
+        UpdateNumOfPops(selectedTowerController.numOfPops);
+        UpdateCurrentPaths(selectedTowerController);
+        Debug.Log("collided with = " + selectedTowerController.gameObject.name);
+    }
     public void UpdateCurrentPaths(TowerController towerController)
     {
         int numOfPaths = 3;
