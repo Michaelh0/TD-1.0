@@ -4,77 +4,61 @@ using UnityEngine;
 
 public class WaveSpawner : MonoBehaviour
 {
-    //could have Wave as scriptable object
-    [System.Serializable]
-    public class Wave
-    {
-        public float spawnRate; //{ get; private set; }
-        public int enemyCount; //{ get; private set; }
-        public EnemyManager.EnemyID enemyType; //{ get; private set; }
-
-        public Wave(float rate, int count, EnemyManager.EnemyID type)
-        {
-            spawnRate = rate;
-            enemyCount = count;
-            enemyType = type;
-        }
-
-    }
-
-    public float timeElapsed;
-    public Wave currentWave;
+    public WaveResource currentWaveResource;
     
-    //public int currentWaveGroupIndex;
-    public int currentWaveIndex;
-    public int currentSpawnIndex;
-    public bool activeWave;
-    
-    public Wave[] waves;
-    
+    //public int currentWaveResourceGroupIndex;
+    public int currentWaveResourceIndex;
+    public bool activeWaveResource;
 
+    public bool isCompleted;
+    
+    public WaveResource[] waveResources;
+    public WaveResource[] instantiatedWaveResources;
     public void SpawnNextWave()
     {
-        currentSpawnIndex = 0;
-        currentWaveIndex++;
-        if (waves.Length > 0 && currentWaveIndex < waves.Length)
+        isCompleted = false;
+        currentWaveResourceIndex++;
+        if (waveResources.Length > 0 && currentWaveResourceIndex < waveResources.Length)
         {
-            currentWave = waves[currentWaveIndex];
+            currentWaveResource = instantiatedWaveResources[currentWaveResourceIndex];
         }
-        GameManager.Instance.AddMoney(100 + currentWaveIndex);
+        LevelManager.Instance.AddMoney(100 + currentWaveResourceIndex);
     }
 
-    public bool isActiveWave()
+    public void InstantiatedWaveResources()
     {
-        return currentSpawnIndex < currentWave.enemyCount;
+        instantiatedWaveResources = new WaveResource[waveResources.Length];
+
+        for (int i = 0; i < waveResources.Length; i++)
+        {
+            instantiatedWaveResources[i] = Instantiate(waveResources[i]);
+            instantiatedWaveResources[i].waveResourceBehavior = Instantiate(waveResources[i].waveResourceBehavior);
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        currentWaveIndex = 0;
-        if (waves.Length > 0)
+        
+        InstantiatedWaveResources();
+
+        currentWaveResourceIndex = 0;
+        if (instantiatedWaveResources.Length > 0)
         {
-            currentWave = waves[currentWaveIndex];
+            currentWaveResource = instantiatedWaveResources[currentWaveResourceIndex];
+            isCompleted = false;
         }
-        activeWave = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        timeElapsed += Time.deltaTime;
         
-        if (timeElapsed > currentWave.spawnRate && currentWaveIndex < waves.Length)
+        if (!isCompleted)
         {
-            timeElapsed = 0;
-            if (isActiveWave())
-            {
-                EnemyController enemy = EnemyManager.Spawn(currentWave.enemyType, EnemyManager.Instance.start.position); 
-                
-                currentSpawnIndex++;    
-
-            }
+            isCompleted = currentWaveResource.waveResourceBehavior.ProcessSpawn(currentWaveResource);
+            
         }
-
+        
     }
 }

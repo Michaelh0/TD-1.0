@@ -108,8 +108,8 @@ public class UIManager : MonoBehaviour
 
         gameOverPanel.SetActive(false);
         upgradePanel.SetActive(false);
-        restartButton.onClick.AddListener(() => GameManager.Instance.Restart());
-        button2x.onClick.AddListener(() => GameManager.Instance.ChangeTimeScale());
+        restartButton.onClick.AddListener(() => LevelManager.Instance.Restart());
+        button2x.onClick.AddListener(() => GameManager.ChangeTimeScale());
     }
 
     // Update is called once per frame
@@ -142,7 +142,7 @@ public class UIManager : MonoBehaviour
                 {
                     if(areaQuery.collider != null && towerQuery.collider == null)
                     {
-                        GameManager.Instance.ReduceMoney(selectedTowerButtonData.towerCost);
+                        LevelManager.Instance.ReduceMoney(selectedTowerButtonData.towerCost);
                         TowerManager.Spawn(selectedTowerButtonData.towerID, worldMousePosition);
                         
                         currentMode = UIMode.defaultMode;
@@ -289,12 +289,12 @@ public class UIManager : MonoBehaviour
 
     public bool CanBuyTower(TowerButtonData towerButtonData)
     {
-        return GameManager.Instance.currentCurrency >= towerButtonData.towerCost;
+        return LevelManager.Instance.currentCurrency >= towerButtonData.towerCost;
     }
 
     public bool CanBuyUpgrade(TowerUpgrade towerUpgrade)
     {
-        return GameManager.Instance.currentCurrency >= towerUpgrade.upgradeCost;
+        return LevelManager.Instance.currentCurrency >= towerUpgrade.upgradeCost;
     }
 
     public void UpgradeTower(int pathIndex)
@@ -304,7 +304,7 @@ public class UIManager : MonoBehaviour
         if (currentTowerUpgrade == null || !CanBuyUpgrade(currentTowerUpgrade)){
             return;
         }
-        GameManager.Instance.ReduceMoney(currentTowerUpgrade.upgradeCost);
+        LevelManager.Instance.ReduceMoney(currentTowerUpgrade.upgradeCost);
         selectedTowerController.UpgradeTower(currentTowerUpgrade);
         selectedTowerController.IncrementUpgradeIndex(pathIndex);
         UpdateCurrentPaths(selectedTowerController);

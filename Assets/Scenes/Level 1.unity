@@ -6584,30 +6584,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79ee588d9558a5245bfc219a2c1b678f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeElapsed: 0
-  currentWave:
-    spawnRate: 0
-    enemyCount: 0
-    enemyType: 0
-  currentWaveIndex: 0
-  currentSpawnIndex: 0
-  activeWave: 0
-  waves:
-  - spawnRate: 1
-    enemyCount: 6
-    enemyType: 0
-  - spawnRate: 1
-    enemyCount: 6
-    enemyType: 1
-  - spawnRate: 1
-    enemyCount: 6
-    enemyType: 2
-  - spawnRate: 1
-    enemyCount: 6
-    enemyType: 3
-  - spawnRate: 1
-    enemyCount: 6
-    enemyType: 4
+  currentWaveResource: {fileID: 0}
+  currentWaveResourceIndex: 0
+  activeWaveResource: 0
+  isCompleted: 0
+  waveResources:
+  - {fileID: 11400000, guid: d155397ce7250524eb6cd13952993947, type: 2}
+  - {fileID: 11400000, guid: 46660b28a8b7d984884f6058659db9b4, type: 2}
+  - {fileID: 11400000, guid: a05aa203f9026fc4aa8f0a954f404799, type: 2}
+  - {fileID: 11400000, guid: 3322752d13d1f0f4497cbb167cd52b4d, type: 2}
+  - {fileID: 11400000, guid: 2d6d0cd288bafe745a99b1484149befe, type: 2}
+  instantiatedWaveResources: []
 --- !u!4 &1302281212
 Transform:
   m_ObjectHideFlags: 0
@@ -8166,6 +8153,7 @@ GameObject:
   - component: {fileID: 1523781391}
   - component: {fileID: 1523781392}
   - component: {fileID: 1523781393}
+  - component: {fileID: 1523781394}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -8185,10 +8173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f97c1e0c0bc59ae4d844bbb61c500056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingCurrency: 1000
-  currentCurrency: 0
-  startingLives: 200
-  currentLives: 0
+  activeSceneName: 
   isFastForward: 1
 --- !u!4 &1523781387
 Transform:
@@ -8339,6 +8324,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaOfEffects: []
+--- !u!114 &1523781394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523781385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f10514ca032f2024f840b600004194e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingCurrency: 1000
+  currentCurrency: 0
+  startingLives: 200
+  currentLives: 0
+  isFastForward: 0
 --- !u!1 &1525622248
 GameObject:
   m_ObjectHideFlags: 0

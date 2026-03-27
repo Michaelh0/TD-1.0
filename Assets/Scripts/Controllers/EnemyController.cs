@@ -37,7 +37,7 @@ public class EnemyController : MonoBehaviour
     public void DamagePlayer()
     {
         gameObject.SetActive(false);
-        GameManager.Instance.ReduceLife(damageValue);
+        LevelManager.Instance.ReduceLife(damageValue);
         
     }
 
@@ -107,7 +107,7 @@ public class EnemyController : MonoBehaviour
             }
             
             
-            GameManager.Instance.AddMoney(moneyValue);
+            LevelManager.Instance.AddMoney(moneyValue);
         }
 
         //restart = true;

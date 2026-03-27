@@ -72,7 +72,7 @@ public class EnemyManager : MonoBehaviour
 
     public void WaveCheck()
     {
-        if (EnemyManager.Instance.HasNoActiveEnemies() && !waveSpawner.isActiveWave())
+        if (EnemyManager.Instance.HasNoActiveEnemies() && waveSpawner.isCompleted)
         {
             waveSpawner.SpawnNextWave();
         }
