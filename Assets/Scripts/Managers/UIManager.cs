@@ -110,6 +110,62 @@ public class UIManager : MonoBehaviour
         upgradePanel.SetActive(false);
         restartButton.onClick.AddListener(() => LevelManager.Instance.Restart());
         button2x.onClick.AddListener(() => GameManager.ChangeTimeScale());
+
+
+        InputManager.onMouseLeftClickEvent += OnMouseLeftClickCallback;
+    }
+
+    
+    public void OnMouseLeftClickCallback()
+    {
+        switch (currentMode)
+        {
+            case UIMode.placeTowerMode:
+                OnPlaceTower();
+                return;
+            case UIMode.upgradeTowerMode:
+
+            case UIMode.defaultMode:
+                OnOpenUpgradePanel();
+                return;
+        }
+    }
+
+    private void OnPlaceTower()
+    {
+        LayerMask placeableZoneMask = LayerMask.GetMask("Placeable Zone");
+
+        LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
+
+        Vector2 origin = GetWorldMouseOrigin();
+
+        RaycastHit2D areaQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, placeableZoneMask, -Mathf.Infinity, Mathf.Infinity);
+
+        RaycastHit2D towerQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, towerZoneMask, -Mathf.Infinity, Mathf.Infinity);
+
+        if(areaQuery.collider != null && towerQuery.collider == null)
+        {
+            LevelManager.Instance.ReduceMoney(selectedTowerButtonData.towerCost);
+            TowerManager.Spawn(selectedTowerButtonData.towerID, GetWorldMousePosition());
+            
+            currentMode = UIMode.defaultMode;
+            towerBlueprint.SetActive(false);
+        }
+    } 
+
+    private void OnOpenUpgradePanel()
+    {
+        LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
+
+        Vector2 origin = GetWorldMouseOrigin();
+
+        RaycastHit2D towerQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, towerZoneMask, -Mathf.Infinity, Mathf.Infinity);
+
+        if(towerQuery.collider != null)
+        {
+            UpgradePanelUI(towerQuery);
+        }
+        
     }
 
     // Update is called once per frame
@@ -118,68 +174,17 @@ public class UIManager : MonoBehaviour
         switch(currentMode)
         {
             case UIMode.placeTowerMode:
-            {
-                Vector3 worldMousePosition = GetWorldMousePosition();
-
-                towerBlueprint.transform.position = worldMousePosition;
-
-                LayerMask placeableZoneMask = LayerMask.GetMask("Placeable Zone");
-
-                LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
-
-                Vector2 origin = GetWorldMouseOrigin(worldMousePosition);
-
-                RaycastHit2D areaQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, placeableZoneMask, -Mathf.Infinity, Mathf.Infinity);
-
-                RaycastHit2D towerQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, towerZoneMask, -Mathf.Infinity, Mathf.Infinity);
-                
-                TowerBlueprintColorShift(areaQuery.collider == null || towerQuery.collider != null);  
-
-                
-                
-                //left click
-                if (Input.GetMouseButtonDown(0))
-                {
-                    if(areaQuery.collider != null && towerQuery.collider == null)
-                    {
-                        LevelManager.Instance.ReduceMoney(selectedTowerButtonData.towerCost);
-                        TowerManager.Spawn(selectedTowerButtonData.towerID, worldMousePosition);
-                        
-                        currentMode = UIMode.defaultMode;
-                        towerBlueprint.SetActive(false);
-                    }
-                    
-                }
-            }        
+                UpdateTowerBlueprint();
                 break;
-            
-            case UIMode.upgradeTowerMode:
-
-            case UIMode.defaultMode:
-            {
-                Vector3 worldMousePosition = GetWorldMousePosition();
-
-                LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
-
-                Vector2 origin = GetWorldMouseOrigin(worldMousePosition);
-
-                RaycastHit2D towerQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, towerZoneMask, -Mathf.Infinity, Mathf.Infinity);
-
-                if (Input.GetMouseButtonDown(0))//
-                {
-                    if(towerQuery.collider != null)
-                    {
-                        UpgradePanelUI(towerQuery);
-                    }
-                }
-            }
+            default:
                 break;
         }
 
     }
 
-    public Vector2 GetWorldMouseOrigin(Vector3 worldMousePosition)
+    public Vector2 GetWorldMouseOrigin()
     {
+        Vector3 worldMousePosition = GetWorldMousePosition();
         return new Vector2(worldMousePosition.x, worldMousePosition.y);
     }
     
@@ -326,6 +331,23 @@ public class UIManager : MonoBehaviour
         Debug.Log("Button clicked = " + towerButtonData.towerID);
         towerBlueprint.SetActive(true);
         
+    }
+
+    public void UpdateTowerBlueprint()
+    {
+        LayerMask placeableZoneMask = LayerMask.GetMask("Placeable Zone");
+
+        LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
+
+        Vector2 origin = GetWorldMouseOrigin();
+
+        RaycastHit2D areaQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, placeableZoneMask, -Mathf.Infinity, Mathf.Infinity);
+
+        RaycastHit2D towerQuery = Physics2D.CircleCast(origin, towerSize, Vector3.back, Mathf.Infinity, towerZoneMask, -Mathf.Infinity, Mathf.Infinity);
+
+        towerBlueprint.transform.position = GetWorldMousePosition();
+        TowerBlueprintColorShift(areaQuery.collider == null || towerQuery.collider != null);  
+
     }
 
     public void TowerBlueprintColorShift(bool isRed)
