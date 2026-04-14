@@ -88,7 +88,8 @@ public class EnemyManager : MonoBehaviour
         {
             //filtering for all active enemies as a list of EnemyController
             //WHERE - conditional in SQL
-            return enemies.Where(enemy => enemy.gameObject.activeSelf).ToList();
+
+            return enemies.Where(enemy => enemy != null && enemy.gameObject.activeSelf).ToList();    
         }
     }
 

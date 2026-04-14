@@ -15,6 +15,9 @@ public class TowerController : MonoBehaviour
     public int damage;
     public int numOfPops;
     public int pierce;
+    public delegate void OnTowerControllerChangeEvent(TowerController towerController); 
+    public OnTowerControllerChangeEvent onTowerControllerChangeEvent = delegate {};
+    
     public TowerUpgradeGroup towerUpgradeGroup;
 
     public int[] towerUpgradeIndices;
@@ -61,7 +64,7 @@ public class TowerController : MonoBehaviour
     public void IncrementPops()
     {
         numOfPops++;
-        UIManager.Instance.UpdateNumOfPops(this);
+        //UIManager.Instance.UpdateNumOfPops(this);
     }
 
     public void IncrementUpgradeIndex(int pathIndex)

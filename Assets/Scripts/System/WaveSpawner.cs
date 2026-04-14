@@ -22,7 +22,7 @@ public class WaveSpawner : MonoBehaviour
         {
             currentWaveResource = instantiatedWaveResources[currentWaveResourceIndex];
         }
-        LevelManager.Instance.AddMoney(100 + currentWaveResourceIndex);
+        PlayerManager.Instance.AddMoney(100 + currentWaveResourceIndex);
     }
 
     public void InstantiatedWaveResources()

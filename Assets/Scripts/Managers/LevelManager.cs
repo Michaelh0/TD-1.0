@@ -5,12 +5,6 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance {get; set;}
-    
-    public int startingCurrency;
-    public int currentCurrency;
-    public int startingLives;
-    public int currentLives;
-
     public bool isFastForward;
 
     private void Awake()
@@ -18,17 +12,13 @@ public class LevelManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-        }
-        currentCurrency = startingCurrency;
-        currentLives = startingLives;
-        
+        }   
     }
 
     void Start()
     {
         isFastForward = false;
-        UIManager.Instance.UpdateLives(currentLives);
-        UIManager.Instance.UpdateMoney(currentCurrency);
+        PlayerManager.onLivesChangeEvent += OnLivesChange;
     }
 
     // Update is called once per frame
@@ -37,17 +27,12 @@ public class LevelManager : MonoBehaviour
         
     }
 
-    public void ReduceLife(int damage)
+    public void OnLivesChange(int currentLives)
     {
-        
-        currentLives -= damage;
         if (currentLives <= 0)
         {
             GameOver();
         }
-        //ui manager lives
-        UIManager.Instance.UpdateLives(currentLives);
-        
     }
 
     public void GameOver()
@@ -60,24 +45,17 @@ public class LevelManager : MonoBehaviour
         UIManager.Instance.GameOverUI();
     }
 
-    public void ReduceMoney(int cost)
-    {
-       currentCurrency -= cost;
-       
-       UIManager.Instance.UpdateMoney(currentCurrency);
-    }
-
-    public void AddMoney(int moneyAmount)
-    {
-        currentCurrency += moneyAmount;
-        
-        UIManager.Instance.UpdateMoney(currentCurrency);
-    }
-
     public void Restart()
     {
         //update this jank
         GameManager.LoadScene("Level 1");
+        //unfreezeui
+        UIManager.Instance.UnfreezeUI();
+        //reset player stats
+        PlayerManager.Instance.InitializePlayerStats();
+        //reset wave spawner
+        //deactivate the towers
+
     }
 
 }

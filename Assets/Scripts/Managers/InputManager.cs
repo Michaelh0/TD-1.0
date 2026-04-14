@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 
@@ -9,14 +10,14 @@ public class InputManager : MonoBehaviour
     public delegate void OnMouseLeftClickEvent();
     public static event OnMouseLeftClickEvent onMouseLeftClickEvent = delegate{};
 
-    // public Vector3 GetWorldMousePosition()
-    // {
-    //     Vector3 mousePos = Input.mousePosition;
+    public static Vector3 GetWorldMousePosition()
+    {
+        Vector3 mousePos = Input.mousePosition;
         
-    //     Vector3 worldMousePosition = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.nearClipPlane));
-    //     worldMousePosition.z = 0;
-    //     return worldMousePosition;
-    // }
+        Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Camera.main.nearClipPlane));
+        worldMousePosition.z = 0;
+        return worldMousePosition;
+    }
 
     private void Awake()
     {
@@ -34,6 +35,7 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+            
         if (Input.GetMouseButtonDown(0))
         {
             onMouseLeftClickEvent.Invoke();
