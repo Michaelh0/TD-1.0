@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaypointManager : MonoBehaviour
+public class WaypointManager : Manager<WaypointManager>
 {
     public Transform[] waypoints;
     public Transform GetWaypoint(int index)
@@ -13,5 +13,10 @@ public class WaypointManager : MonoBehaviour
         }
 
         return waypoints[index];
+    }
+    protected override void Awake()
+    {
+        base.Awake();
+        waypoints = GetComponentsInChildren<Transform>();
     }
 }

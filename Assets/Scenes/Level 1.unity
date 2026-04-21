@@ -7524,6 +7524,7 @@ MonoBehaviour:
   - {fileID: 390096559}
   leftOrientationButton: {fileID: 1749584658}
   rightOrientationButton: {fileID: 1362904554}
+  sellButton: {fileID: 3522222}
   towerNameText: {fileID: 1334445034}
   numOfPopsText: {fileID: 750924120}
   currentOrientation: {fileID: 789645949}
@@ -8667,6 +8668,7 @@ MonoBehaviour:
   currentMoney: 0
   startingLives: 200
   currentLives: 0
+  sellBackPercentage: 0.7
 --- !u!1 &1525622248
 GameObject:
   m_ObjectHideFlags: 0

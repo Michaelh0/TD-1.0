@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class TowerManager : MonoBehaviour
+public class TowerManager : Manager<TowerManager>
 {
     // Start is called before the first frame update
 
@@ -13,9 +13,6 @@ public class TowerManager : MonoBehaviour
         bombTower,
     }
 
-    public static TowerManager Instance{get; set;}
-
-
     public static TowerController Spawn(int towerType, Vector3 position)
     {
         //start set up in unity
@@ -23,14 +20,14 @@ public class TowerManager : MonoBehaviour
         TowerController towerController = towerGameObject.GetComponent<TowerController>();
 
 
-        //check if projectileController exists - to initialize
+        //check if towerController exists - to initialize
         if (!Instance.towers.Contains(towerController))
         {
             Instance.towers.Add(towerController);
             towerGameObject.name = "Tower " + Instance.towers.Count.ToString();
             towerController.towerBehavior = towerBehaviorsDict[(TowerID)towerType].Invoke();
         }
-        //towerController.OnSpawn();
+        towerController.OnSpawn();
 
         return towerController;
     }
@@ -43,14 +40,6 @@ public class TowerManager : MonoBehaviour
         {TowerID.bombTower, () => new BombTowerBehavior()},
     };
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
-    }
 
     void Start()
     {

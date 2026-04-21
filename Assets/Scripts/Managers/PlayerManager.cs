@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : Manager<PlayerManager>
 {
-    public static PlayerManager Instance {get; set;}
     public delegate void OnMoneyChangeEvent(int money);
     public static event OnMoneyChangeEvent onMoneyChangeEvent = delegate{};
     public delegate void OnLivesChangeEvent(int lives);
@@ -13,6 +12,7 @@ public class PlayerManager : MonoBehaviour
     public int currentMoney;
     public int startingLives;
     public int currentLives;
+    public float sellBackPercentage;
  
     public void ReduceMoney(int money)
     {
@@ -45,14 +45,18 @@ public class PlayerManager : MonoBehaviour
         onMoneyChangeEvent.Invoke(currentMoney);
         onLivesChangeEvent.Invoke(currentLives);
     }
-    private void Awake()
+    public void SellTower(TowerController towerController)
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        
+        towerController.gameObject.SetActive(false);
+        int sellValue = (int) Mathf.Round(towerController.towerValue * sellBackPercentage);
+        AddMoney(sellValue);
     }
+
+    public int GetSellValue(TowerController towerController)
+    {
+        return (int) Mathf.Round(towerController.towerValue * sellBackPercentage);
+    }
+
 
     void Start()
     {

@@ -4,9 +4,8 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 
-public class InputManager : MonoBehaviour
+public class InputManager : Manager<InputManager>
 {
-    public static InputManager Instance {get; set;}
     public delegate void OnMouseLeftClickEvent();
     public static event OnMouseLeftClickEvent onMouseLeftClickEvent = delegate{};
 
@@ -19,13 +18,6 @@ public class InputManager : MonoBehaviour
         return worldMousePosition;
     }
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-    }
 
     void Start()
     {

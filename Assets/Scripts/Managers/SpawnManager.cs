@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 
 
-public class SpawnManager : MonoBehaviour
+public class SpawnManager : Manager<SpawnManager>
 {   
 
     public enum SpawnID{
@@ -14,8 +14,6 @@ public class SpawnManager : MonoBehaviour
         AOE,
     }
 
-
-    public static SpawnManager Instance{get; set;}
     public static GameObject Spawn(SpawnID key, int innerKey, Vector3 position)
     {
         if (!Instance.worldObjects.TryGetValue(key, out Dictionary<int, List<GameObject>> foundDictObjects))
@@ -47,15 +45,6 @@ public class SpawnManager : MonoBehaviour
     //public List<GameObject[]> prefabs;
     public GameObjectArray2d[] prefabs;
     public Dictionary<SpawnID, Dictionary<int, List<GameObject>>> worldObjects;
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
-    }
     // Start is called before the first frame update
     private void Start()
     {

@@ -9,6 +9,7 @@ public class UpgradeUIScreen : UIScreen
     public Button[] upgradePathButtons;
     public Button leftOrientationButton;
     public Button rightOrientationButton;
+    public Button sellButton;
     public TextMeshProUGUI towerNameText;
     public TextMeshProUGUI numOfPopsText;
     public TextMeshProUGUI currentOrientation;
@@ -64,6 +65,7 @@ public class UpgradeUIScreen : UIScreen
             UpdateTowerName(selectedTowerController.towerID.ToString());
             UpdateNumOfPops(selectedTowerController.numOfPops);
             UpdateCurrentPaths(selectedTowerController);
+            UpdateSellButtonValue();
             Debug.Log("collided with = " + selectedTowerController.gameObject.name);
         }
         
@@ -74,6 +76,7 @@ public class UpgradeUIScreen : UIScreen
         UpdateTowerName(towerController.towerID.ToString());
         UpdateNumOfPops(towerController.numOfPops);
         UpdateCurrentPaths(towerController);
+        UpdateSellButtonValue();
     }
 
     private void UpdateTowerName(string towerName)
@@ -129,11 +132,26 @@ public class UpgradeUIScreen : UIScreen
             return;
         }
         PlayerManager.Instance.ReduceMoney(currentTowerUpgrade.upgradeCost);
+        
         selectedTowerController.UpgradeTower(currentTowerUpgrade);
         selectedTowerController.IncrementUpgradeIndex(pathIndex);
         UpdateCurrentPaths(selectedTowerController);
+        UpdateSellButtonValue();
         Debug.Log("path is " + (pathIndex + 1).ToString());
         Debug.Log("selected tower: " + selectedTowerController.gameObject.name);
+    }
+
+    public void OnSellTower()
+    {
+        PlayerManager.Instance.SellTower(selectedTowerController);
+        
+        Deactivate();
+    }
+
+    public void UpdateSellButtonValue()
+    {
+        TextMeshProUGUI sellButtonName = sellButton.gameObject.GetComponentInChildren<TextMeshProUGUI>();
+        sellButtonName.text = "Sells For \n" + PlayerManager.Instance.GetSellValue(selectedTowerController).ToString();
     }
 
     void Start()
@@ -143,6 +161,7 @@ public class UpgradeUIScreen : UIScreen
             int index = i;
             upgradePathButtons[i].onClick.AddListener(() => OnUpgradeTowerButton(index));
         }
+        sellButton.onClick.AddListener(() => OnSellTower());
         Deactivate();
     }
 }

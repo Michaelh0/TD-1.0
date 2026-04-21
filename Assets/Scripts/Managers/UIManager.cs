@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 
-public class UIManager : MonoBehaviour
+public class UIManager : Manager<UIManager>
 {
     // Start is called before the first frame update
 
@@ -22,18 +22,10 @@ public class UIManager : MonoBehaviour
     
     //worry update that happens before camera is initialized - race condition
 
-    public static UIManager Instance {get; set;}
     public TowerUIScreen towerUIScreen;
     public UpgradeUIScreen upgradeUIScreen;
     public GameOverUIScreen gameOverUIScreen;
     public PlayerStatUIOverlay playerStatUIOverlay;
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-    }
 
     void Start()
     {

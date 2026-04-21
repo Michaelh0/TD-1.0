@@ -1,12 +1,12 @@
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Manager<GameManager>
 {
     public string activeSceneName;
-    public static GameManager Instance {get; set;}
     public bool isFastForward;
 
     public static void ChangeTimeScale()
@@ -22,12 +22,9 @@ public class GameManager : MonoBehaviour
         Instance.activeSceneName = sceneName;
     }
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
+        base.Awake();
         activeSceneName = SceneManager.GetActiveScene().name;
     }
 

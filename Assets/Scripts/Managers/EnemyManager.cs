@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : Manager<EnemyManager>
 {
 
     public enum EnemyID{
@@ -13,8 +13,6 @@ public class EnemyManager : MonoBehaviour
         yellow,
         pink,
     }
-
-    public static EnemyManager Instance {get; set;}
     public static EnemyController Spawn(EnemyID enemyID, Vector3 position)
     {
         //start set up in unity
@@ -26,7 +24,6 @@ public class EnemyManager : MonoBehaviour
         //check if enemyController exists - to initialize
         if (!Instance.enemies.Contains(enemyController))
         {
-            enemyController.waypointManager = Instance.waypointManager;
             Instance.enemies.Add(enemyController);
             
             int enemyCount = SpawnManager.Instance.worldObjects[SpawnManager.SpawnID.enemy][(int)enemyID].Count;
@@ -79,7 +76,6 @@ public class EnemyManager : MonoBehaviour
     }
 
     public Transform start;
-    public WaypointManager waypointManager;
     public List<EnemyController> enemies;
     public WaveSpawner waveSpawner;
     public List<EnemyController> ActiveEnemies
@@ -91,15 +87,6 @@ public class EnemyManager : MonoBehaviour
 
             return enemies.Where(enemy => enemy != null && enemy.gameObject.activeSelf).ToList();    
         }
-    }
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
     }
 
     public bool HasNoActiveEnemies()

@@ -2,18 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Manager<LevelManager>
 {
-    public static LevelManager Instance {get; set;}
     public bool isFastForward;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }   
-    }
 
     void Start()
     {

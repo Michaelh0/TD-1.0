@@ -1,15 +1,16 @@
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AOEManager : MonoBehaviour
+public class AOEManager : Manager<AOEManager>
 {
 
     public enum AOEID{
         bomb,
     }
 
-    public static AOEManager Instance {get; set;}
+    
 
     //copy from spawn in enemy manager to have multiple ProjectileIDs - repeat for FUTURE tower manager
     public static AOEController Spawn(ProjectileController projectileController, AOEID aoeID)
@@ -32,15 +33,6 @@ public class AOEManager : MonoBehaviour
     }
     
     public List<AOEController> areaOfEffects;
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
-    }
     
     // Start is called before the first frame update
     void Start()

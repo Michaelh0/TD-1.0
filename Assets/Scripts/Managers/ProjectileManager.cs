@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileManager : MonoBehaviour
+public class ProjectileManager : Manager<ProjectileManager>
 {
     public enum ProjectileID{
         dart,
         tack,
         bomb,
     }
-
-    public static ProjectileManager Instance {get; set;}
 
     //copy from spawn in enemy manager to have multiple ProjectileIDs - repeat for FUTURE tower manager
     public static ProjectileController Spawn(TowerController towerController, ProjectileID projectileID)
@@ -36,14 +34,6 @@ public class ProjectileManager : MonoBehaviour
 
     public List<ProjectileController> projectiles;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
-    }
 
     // Start is called before the first frame update
     void Start()

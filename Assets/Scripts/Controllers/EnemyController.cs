@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public WaypointManager waypointManager;
     public int currentIndex;
     public float speed;
     public float distanceThreshold;
@@ -22,7 +21,7 @@ public class EnemyController : MonoBehaviour
     {
         currentHp = hp;
         currentIndex = 0;
-        currentWaypoint = waypointManager.GetWaypoint(currentIndex++);
+        currentWaypoint = WaypointManager.Instance.GetWaypoint(currentIndex++);
         enemyID = givenEnemyID;
         //Invoke(nameof(ColliderOn), 0.5f);
         //ColliderOn();
@@ -68,7 +67,7 @@ public class EnemyController : MonoBehaviour
         
         if (Vector3.Distance(currentWaypoint.position,transform.position) <= distanceThreshold)
         {
-            currentWaypoint = waypointManager.GetWaypoint(currentIndex++);
+            currentWaypoint = WaypointManager.Instance.GetWaypoint(currentIndex++);
             if (currentWaypoint == null)
             {
                 DamagePlayer();

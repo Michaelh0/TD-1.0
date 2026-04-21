@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class TowerController : MonoBehaviour
 {
+    public TowerManager.TowerID towerID;
+    public int towerCost;
+    public float towerValue;
+    public float lastAttackTime;
+    public EnemyController bestEnemy;
+    
     public float range;
     public float attackRate;
-    public float lastAttackTime;
-    public int towerCost;
     public ProjectileManager.ProjectileID projectileID;
-    public TowerManager.TowerID towerID;
     public TowerBehavior towerBehavior;
-    public EnemyController bestEnemy;
     public int damage;
     public int numOfPops;
     public int pierce;
+
+    private float baseRange;
+    private float baseAttackRate;
+    private ProjectileManager.ProjectileID baseProjectileID;
+    private int baseDamage;
+    private int baseNumOfPops;
+    private int basePierce;
+    
     public delegate void OnTowerControllerChangeEvent(TowerController towerController); 
     public OnTowerControllerChangeEvent onTowerControllerChangeEvent = delegate {};
     
     public TowerUpgradeGroup towerUpgradeGroup;
-
     public int[] towerUpgradeIndices;
     
     
@@ -82,13 +91,13 @@ public class TowerController : MonoBehaviour
         damage += towerUpgrade.damage;
         projectileID = towerUpgrade.projectileID;
 
-        
-        
+        towerValue += towerUpgrade.upgradeCost;
         if(towerUpgrade.towerUpgradeComponent == null)
         {
             return;
         }
         towerUpgrade.towerUpgradeComponent.UpgradeTowerComponent(this);
+
         
     }
 
@@ -110,11 +119,34 @@ public class TowerController : MonoBehaviour
         return selectedPath[currentUpgradeIndex];
     }
 
+    public void OnSpawn()
+    {
+        
+        range = baseRange;
+        attackRate = baseAttackRate;
+        projectileID = baseProjectileID;
+        damage = baseDamage;
+        numOfPops = baseNumOfPops;
+        pierce = basePierce;
+        towerValue = towerCost;
+        
+        lastAttackTime = attackRate;
+        towerUpgradeIndices = new int[3];
+    }
+
+    private void Awake()
+    {
+        baseRange = range;
+        baseAttackRate = attackRate;
+        baseProjectileID = projectileID;
+        baseDamage = damage;
+        baseNumOfPops = numOfPops;
+        basePierce = pierce;
+    }
+
     void Start()
     {
-        lastAttackTime = attackRate;
         
-        towerUpgradeIndices = new int[3];
     }
 
     // Update is called once per frame
