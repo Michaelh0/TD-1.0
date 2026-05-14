@@ -28,4 +28,8 @@ public class TackShooterBehavior : TowerBehavior
         }
         
     }
+    public override void Reset()
+    {
+        numOfProjectiles = 8;
+    }
 }

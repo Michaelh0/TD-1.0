@@ -13,4 +13,8 @@ public class BombTowerBehavior : TowerBehavior
 
         projectileController.direction = direction;
     }
+    public override void Reset()
+    {
+    
+    }
 }

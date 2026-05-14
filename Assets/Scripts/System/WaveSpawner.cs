@@ -10,18 +10,18 @@ public class WaveSpawner : MonoBehaviour
     public int currentWaveResourceIndex;
     public bool activeWaveResource;
 
-    public bool isCompleted;
+    private bool isCompleted;
     
     public WaveResource[] waveResources;
     public WaveResource[] instantiatedWaveResources;
     public void SpawnNextWave()
     {
         isCompleted = false;
-        currentWaveResourceIndex++;
         if (waveResources.Length > 0 && currentWaveResourceIndex < waveResources.Length)
         {
             currentWaveResource = instantiatedWaveResources[currentWaveResourceIndex];
         }
+        
         PlayerManager.Instance.AddMoney(100 + currentWaveResourceIndex);
     }
 
@@ -36,18 +36,40 @@ public class WaveSpawner : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void InitializeWaveSpawner()
     {
-        
-        InstantiatedWaveResources();
-
         currentWaveResourceIndex = 0;
         if (instantiatedWaveResources.Length > 0)
         {
             currentWaveResource = instantiatedWaveResources[currentWaveResourceIndex];
             isCompleted = false;
         }
+    }
+
+    public void ResetWaveResourceBehaviors()
+    {
+        for (int i = 0; i < waveResources.Length; i++)
+        {
+            instantiatedWaveResources[i].waveResourceBehavior.ResetWaveResourceBehavior();
+        } 
+    }
+
+    public bool IsLevelCompleted()
+    {
+        return isCompleted && currentWaveResourceIndex >= waveResources.Length;
+    }
+
+    public bool IsWaveCompleted()
+    {
+        return isCompleted;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+        InstantiatedWaveResources();
+        InitializeWaveSpawner();
     }
 
     // Update is called once per frame
@@ -57,7 +79,10 @@ public class WaveSpawner : MonoBehaviour
         if (!isCompleted)
         {
             isCompleted = currentWaveResource.waveResourceBehavior.ProcessSpawn(currentWaveResource);
-            
+            if (isCompleted)
+            {
+                currentWaveResourceIndex++;
+            }
         }
         
     }

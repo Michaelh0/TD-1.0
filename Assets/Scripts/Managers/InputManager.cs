@@ -19,11 +19,6 @@ public class InputManager : Manager<InputManager>
     }
 
 
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class UIScreen : MonoBehaviour, ISubscribable, IActivatable, Interactable
+public abstract class UIScreen : UICollection, ISubscribable, IActivatable, Interactable
 {
     //state changes
     protected abstract void Subscribe();

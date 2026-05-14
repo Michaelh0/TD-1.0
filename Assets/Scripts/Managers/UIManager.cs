@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor;
+using System.Linq.Expressions;
 
 
 public class UIManager : Manager<UIManager>
@@ -27,40 +29,50 @@ public class UIManager : Manager<UIManager>
     public GameOverUIScreen gameOverUIScreen;
     public PlayerStatUIOverlay playerStatUIOverlay;
 
-    void Start()
+    // public UIScreen[] screens;
+    // public UIOverlay[] overlays;
+
+    public UICollection[] uICollections;
+    
+    
+    protected override void Start()
     {
-        SetInputToDefaultMode();
+        base.Start();
+        SetConfig(new DefaultModeUIConfig());
     }
 
-    public static void SetInputToPlaceTowerMode()
+    //Config - our visitors 
+    //function Process 
+
+    //sudo understanding visitor pattern
+    public static void SetConfig(UIConfig uIConfig)
     {
-        Instance.upgradeUIScreen.InputUnsubscribe();
-        Instance.towerUIScreen.InputSubscribe();
+        foreach(var uICollection in Instance.uICollections)
+        {
+            uICollection.Accept(uIConfig);
+        }
     }
 
-    public static void SetInputToDefaultMode()
+    public static void FreezeUI()
     {
-        Instance.upgradeUIScreen.InputSubscribe();
-        Instance.towerUIScreen.InputUnsubscribe();
+        foreach(var uICollection in Instance.uICollections)
+        {
+            if (uICollection is UIScreen uIScreen)
+            {
+                uIScreen.SetInteractable(false);
+            }
+        }
     }
 
-    public void GameOverUI()
+    public static void UnfreezeUI()
     {
-        FreezeUI();
-        gameOverUIScreen.Activate();
-        upgradeUIScreen.Deactivate();
-    }
-
-    public void FreezeUI()
-    {
-        towerUIScreen.SetInteractable(false);
-        upgradeUIScreen.SetInteractable(false);
-    }
-
-    public void UnfreezeUI()
-    {
-        towerUIScreen.SetInteractable(true);
-        upgradeUIScreen.SetInteractable(true);
+        foreach(var uICollection in Instance.uICollections)
+        {
+            if (uICollection is UIScreen uIScreen)
+            {
+                uIScreen.SetInteractable(true);
+            }
+        }
     }
 }
 

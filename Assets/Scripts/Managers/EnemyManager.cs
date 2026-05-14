@@ -64,14 +64,55 @@ public class EnemyManager : Manager<EnemyManager>
         }
         //dies remove from active list
         // can force spawn or auto spawn - 
-        
+        if (!hasLesserEnemy)
+        {
+            excessDamage = (int) enemy.enemyID;
+        }
+        PlayerManager.Instance.AddMoney(enemy.moneyValue);
+
+        for(int i = 0; i < excessDamage; i++)
+        {
+            EnemyID lesserEnemy = enemy.enemyID - i;
+            int lesserEnemyID = (int) lesserEnemy;
+            EnemyController lesserEnemyController = SpawnManager.Instance.prefabs[(int) SpawnManager.SpawnID.enemy].listOfGameObjects[lesserEnemyID].GetComponent<EnemyController>();
+            PlayerManager.Instance.AddMoney(lesserEnemyController.moneyValue);    
+        }
     }
 
     public void WaveCheck()
     {
-        if (EnemyManager.Instance.HasNoActiveEnemies() && waveSpawner.isCompleted)
+        if (LevelManager.Instance.isGameOver)
+        {
+            return;
+        }
+
+        if (!HasNoActiveEnemies())
+        {
+            return;
+        }
+
+        if(waveSpawner.IsLevelCompleted())
+        {
+            LevelManager.Instance.GameOver(hasWon: true);
+        }
+        else if (waveSpawner.IsWaveCompleted())
         {
             waveSpawner.SpawnNextWave();
+        }
+        
+    }
+
+    public static void RestartWaveSpawner()
+    {
+        Instance.waveSpawner.ResetWaveResourceBehaviors();
+        Instance.waveSpawner.InitializeWaveSpawner();
+    }
+
+    public static void DeactivateEnemies()
+    {
+        foreach(var enemy in Instance.ActiveEnemies)
+        {
+            enemy.gameObject.SetActive(false);
         }
     }
 
@@ -94,16 +135,4 @@ public class EnemyManager : Manager<EnemyManager>
         return ActiveEnemies.Count == 0;
     }
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-            
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

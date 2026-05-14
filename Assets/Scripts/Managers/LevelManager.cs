@@ -4,50 +4,52 @@ using UnityEngine;
 
 public class LevelManager : Manager<LevelManager>
 {
+    public bool HasPlayerWon => hasPlayerWon;
     public bool isFastForward;
-
-
-    void Start()
+    public bool isGameOver;
+    private bool hasPlayerWon;
+    protected override void Start()
     {
         isFastForward = false;
         PlayerManager.onLivesChangeEvent += OnLivesChange;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        base.Start();
     }
 
     public void OnLivesChange(int currentLives)
     {
         if (currentLives <= 0)
         {
-            GameOver();
+            GameOver(hasWon: false);
         }
     }
 
-    public void GameOver()
+    public void GameOver(bool hasWon)
     {
-        UnityEngine.Debug.Log("Game Over");
-        //ui manager game over
+        hasPlayerWon = hasWon;
         
-
-        SpawnManager.Instance.FreezeFrame();
-        UIManager.Instance.GameOverUI();
+        UnityEngine.Debug.Log("Game Over");
+        isGameOver = true;
+        SpawnManager.Instance.SetFreezeFrame(true);
+        UIManager.FreezeUI();
+        UIManager.SetConfig(new GameOverUIConfig());
     }
 
     public void Restart()
     {
-        //update this jank
-        GameManager.LoadScene("Level 1");
+        isGameOver = false;
         //unfreezeui
-        UIManager.Instance.UnfreezeUI();
+        UIManager.UnfreezeUI();
+        UIManager.SetConfig(new RestartUIConfig());
         //reset player stats
         PlayerManager.Instance.InitializePlayerStats();
         //reset wave spawner
+        EnemyManager.DeactivateEnemies();
         //deactivate the towers
-
+        TowerManager.DeactivateTowers();
+        //deactivate the projectiles
+        ProjectileManager.DeactivateProjectiles();
+        EnemyManager.RestartWaveSpawner();
+        SpawnManager.Instance.SetFreezeFrame(false);
     }
 
 }

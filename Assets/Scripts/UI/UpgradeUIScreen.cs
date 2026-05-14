@@ -41,6 +41,12 @@ public class UpgradeUIScreen : UIScreen
     {
         InputManager.onMouseLeftClickEvent -= OnQueryOpenUpgradePanel;
     }
+
+    public void OnDestroy()
+    {
+        InputUnsubscribe();
+    }
+
     public override void SetInteractable(bool state)
     {
         for (int i = 0; i < upgradePathButtons.Length; i++)
@@ -49,9 +55,15 @@ public class UpgradeUIScreen : UIScreen
         }
         leftOrientationButton.interactable = state;
         rightOrientationButton.interactable = state;
+        sellButton.interactable = state;
+
     }
     private void OnQueryOpenUpgradePanel()
     {
+        if(LevelManager.Instance.isGameOver){
+            return;
+        }
+
         LayerMask towerZoneMask = LayerMask.GetMask("Tower Zone");
 
         Vector2 origin = (Vector2) InputManager.GetWorldMousePosition();
@@ -108,15 +120,6 @@ public class UpgradeUIScreen : UIScreen
             upgradeName.text = currentTowerUpgrade.upgradeCost.ToString();
         }
         
-    }
-
-    public void UpdateNumOfPops(TowerController towerController)
-    {
-        if (towerController != selectedTowerController)
-        {
-            return;
-        }
-        UpdateNumOfPops(towerController.numOfPops);
     }
 
     public bool CanBuyUpgrade(TowerUpgrade towerUpgrade)

@@ -46,8 +46,9 @@ public class SpawnManager : Manager<SpawnManager>
     public GameObjectArray2d[] prefabs;
     public Dictionary<SpawnID, Dictionary<int, List<GameObject>>> worldObjects;
     // Start is called before the first frame update
-    private void Start()
+    protected override void Start()
     {
+        
         Dictionary<int, List<GameObject>> enemyDict = new Dictionary<int, List<GameObject>>();
 
         foreach (EnemyManager.EnemyID enemyID in Enum.GetValues(typeof(EnemyManager.EnemyID)))
@@ -84,12 +85,12 @@ public class SpawnManager : Manager<SpawnManager>
 
         };
          
-        
+        base.Start();
         //worldObjects.Add();
     }
 
     // aka Pause
-    public void FreezeFrame() 
+    public void SetFreezeFrame(bool state) 
     {
 
         foreach (KeyValuePair<SpawnID, Dictionary<int, List<GameObject>>> worldObjectsPair in worldObjects)
@@ -119,8 +120,9 @@ public class SpawnManager : Manager<SpawnManager>
                 {
 
                     MonoBehaviour monoBehavior = currentObject.GetComponent(currentType) as MonoBehaviour;
-
-                    monoBehavior.enabled = false;
+                    
+                    //to freeze - set to state to true
+                    monoBehavior.enabled = !state;
                 }
             }
         }

@@ -73,7 +73,7 @@ public class TowerController : MonoBehaviour
     public void IncrementPops()
     {
         numOfPops++;
-        //UIManager.Instance.UpdateNumOfPops(this);
+        onTowerControllerChangeEvent.Invoke(this);
     }
 
     public void IncrementUpgradeIndex(int pathIndex)
@@ -97,8 +97,8 @@ public class TowerController : MonoBehaviour
             return;
         }
         towerUpgrade.towerUpgradeComponent.UpgradeTowerComponent(this);
-
-        
+        onTowerControllerChangeEvent.Invoke(this);
+                
     }
 
     public TowerUpgrade GetTowerUpgrade(int pathIndex)
@@ -119,6 +119,7 @@ public class TowerController : MonoBehaviour
         return selectedPath[currentUpgradeIndex];
     }
 
+    //when we call spawn
     public void OnSpawn()
     {
         
@@ -132,8 +133,10 @@ public class TowerController : MonoBehaviour
         
         lastAttackTime = attackRate;
         towerUpgradeIndices = new int[3];
+        towerBehavior.Reset();
     }
 
+    //constructor 
     private void Awake()
     {
         baseRange = range;
@@ -142,6 +145,7 @@ public class TowerController : MonoBehaviour
         baseDamage = damage;
         baseNumOfPops = numOfPops;
         basePierce = pierce;
+        
     }
 
     void Start()

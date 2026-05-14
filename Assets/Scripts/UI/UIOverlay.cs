@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public abstract class UIOverlay : MonoBehaviour, ISubscribable, IActivatable
+public abstract class UIOverlay : UICollection, ISubscribable, IActivatable
 {
     //state changes
     protected abstract void Subscribe();

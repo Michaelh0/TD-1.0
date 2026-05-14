@@ -65,7 +65,7 @@ public class TowerUIScreen : UIScreen
             
         if(selectedTowerButtonData == null)
         {
-            UIManager.SetInputToPlaceTowerMode();
+            UIManager.SetConfig(new PlaceTowerModeUIConfig());
         }
         selectedTowerButtonData = towerButtonData;
         
@@ -80,7 +80,7 @@ public class TowerUIScreen : UIScreen
             return;
         }
         selectedTowerButtonData = null;
-        UIManager.SetInputToDefaultMode();
+        UIManager.SetConfig(new DefaultModeUIConfig());
         towerBlueprint.SetActive(false);
         cancelButton.gameObject.SetActive(false);
     }

@@ -17,9 +17,15 @@ public class StandardWaveResourceBehavior : WaveResourceBehavior
                 
             currentSpawnCount++;
         }
-        UnityEngine.Debug.Log(currentSpawnCount);
-        UnityEngine.Debug.Log(waveResource.enemyCount);
+        //UnityEngine.Debug.Log(currentSpawnCount);
+        //UnityEngine.Debug.Log(waveResource.enemyCount);
         return currentSpawnCount >= waveResource.enemyCount;
+    }
+
+    public override void ResetWaveResourceBehavior()
+    {
+        currentSpawnCount = 0;
+        timeElapsed = 0;
     }
 }
 

@@ -30,20 +30,14 @@ public class ProjectileManager : Manager<ProjectileManager>
         return projectileController;
     }
     
-    
+    public static void DeactivateProjectiles()
+    {
+        foreach(var projectile in Instance.projectiles)
+        {
+            projectile.gameObject.SetActive(false);
+        }
+    }
 
     public List<ProjectileController> projectiles;
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

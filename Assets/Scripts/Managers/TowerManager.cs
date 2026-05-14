@@ -32,7 +32,17 @@ public class TowerManager : Manager<TowerManager>
         return towerController;
     }
 
+    public static void DeactivateTowers()
+    {
+        foreach(var tower in Instance.towers)
+        {
+            tower.gameObject.SetActive(false);
+        }
+    }
+
     public List<TowerController> towers;
+    
+    //v table pattern - id map
     public static Dictionary<TowerID, Func<TowerBehavior>> towerBehaviorsDict = new Dictionary<TowerID, Func<TowerBehavior>>()
     {
         {TowerID.dartMonkey, () => new DartMonkeyBehavior()},
@@ -40,15 +50,4 @@ public class TowerManager : Manager<TowerManager>
         {TowerID.bombTower, () => new BombTowerBehavior()},
     };
 
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

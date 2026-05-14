@@ -18,4 +18,8 @@ public class DartMonkeyBehavior : TowerBehavior
         // UnityEngine.Debug.Log("Attacking");
         // UnityEngine.Debug.Log(bestEnemy.gameObject.name);
     }
+    public override void Reset()
+    {
+        
+    }
 }

@@ -58,9 +58,11 @@ public class PlayerManager : Manager<PlayerManager>
     }
 
 
-    void Start()
+    protected override void Start()
     {
+        
         InitializePlayerStats();
+        base.Start();
     }
 
 }
