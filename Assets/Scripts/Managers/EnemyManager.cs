@@ -1,0 +1,138 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class EnemyManager : Manager<EnemyManager>
+{
+
+    public enum EnemyID{
+        red,
+        blue,
+        green,
+        yellow,
+        pink,
+    }
+    public static EnemyController Spawn(EnemyID enemyID, Vector3 position)
+    {
+        //start set up in unity
+
+        GameObject enemy = SpawnManager.Spawn(SpawnManager.SpawnID.enemy, (int)enemyID, position);
+        EnemyController enemyController = enemy.GetComponent<EnemyController>();
+        
+
+        //check if enemyController exists - to initialize
+        if (!Instance.enemies.Contains(enemyController))
+        {
+            Instance.enemies.Add(enemyController);
+            
+            int enemyCount = SpawnManager.Instance.worldObjects[SpawnManager.SpawnID.enemy][(int)enemyID].Count;
+
+            enemy.name = enemyID + " " + enemyCount.ToString();
+        }
+        
+        enemyController.OnSpawn(enemyID);
+        return enemyController;
+    }
+
+    //possible to change sprite based on hp instead of spawn new enemy 
+
+    //bug - two red - shot - one survived !!!!!
+
+
+    public void EnemyDies(EnemyController enemy, Ignorable ignoreProjectile)
+    {
+        
+        // currentHP <= 0 // 
+        int nextEnemyID = (int) enemy.enemyID - 1;
+        
+        int excessDamage = enemy.currentHp * -1;
+        // effectively reduces enemyID to check damage
+        bool hasLesserEnemy = nextEnemyID - excessDamage >= 0;
+        
+        if (hasLesserEnemy) 
+        {
+            // effectively move to next layer of balloon
+            EnemyID lesserEnemy = (EnemyID) nextEnemyID - excessDamage; 
+            
+            
+            EnemyController newEnemy = Spawn(lesserEnemy, enemy.gameObject.transform.position);
+            newEnemy.currentIndex = enemy.currentIndex;
+            newEnemy.currentWaypoint = enemy.currentWaypoint;
+            ignoreProjectile.AddEnemyToIgnoreList(newEnemy);
+
+        }
+        //dies remove from active list
+        // can force spawn or auto spawn - 
+        if (!hasLesserEnemy)
+        {
+            excessDamage = (int) enemy.enemyID;
+        }
+        PlayerManager.Instance.AddMoney(enemy.moneyValue);
+
+        for(int i = 0; i < excessDamage; i++)
+        {
+            EnemyID lesserEnemy = enemy.enemyID - i;
+            int lesserEnemyID = (int) lesserEnemy;
+            EnemyController lesserEnemyController = SpawnManager.Instance.prefabs[(int) SpawnManager.SpawnID.enemy].listOfGameObjects[lesserEnemyID].GetComponent<EnemyController>();
+            PlayerManager.Instance.AddMoney(lesserEnemyController.moneyValue);    
+        }
+    }
+
+    public void WaveCheck()
+    {
+        if (LevelManager.Instance.isGameOver)
+        {
+            return;
+        }
+
+        if (!HasNoActiveEnemies())
+        {
+            return;
+        }
+
+        if(waveSpawner.IsLevelCompleted())
+        {
+            LevelManager.Instance.GameOver(hasWon: true);
+        }
+        else if (waveSpawner.IsWaveCompleted())
+        {
+            waveSpawner.SpawnNextWave();
+        }
+        
+    }
+
+    public static void RestartWaveSpawner()
+    {
+        Instance.waveSpawner.ResetWaveResourceBehaviors();
+        Instance.waveSpawner.InitializeWaveSpawner();
+    }
+
+    public static void DeactivateEnemies()
+    {
+        foreach(var enemy in Instance.ActiveEnemies)
+        {
+            enemy.gameObject.SetActive(false);
+        }
+    }
+
+    public Transform start;
+    public List<EnemyController> enemies;
+    public WaveSpawner waveSpawner;
+    public List<EnemyController> ActiveEnemies
+    {
+        get
+        {
+            //filtering for all active enemies as a list of EnemyController
+            //WHERE - conditional in SQL
+
+            return enemies.Where(enemy => enemy != null && enemy.gameObject.activeSelf).ToList();    
+        }
+    }
+
+    public bool HasNoActiveEnemies()
+    {
+        return ActiveEnemies.Count == 0;
+    }
+
+}
